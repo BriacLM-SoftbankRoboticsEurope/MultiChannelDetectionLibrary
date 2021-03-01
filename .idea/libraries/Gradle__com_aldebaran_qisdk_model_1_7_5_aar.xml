@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="Gradle: com.aldebaran:qisdk-model:1.7.5@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/55cc0a37a627a0bc4927cc86f99a42fb/jetified-qisdk-model-1.7.5/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fa4a483a5088739a68cae6a99685b381/jetified-qisdk-model-1.7.5/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/dc43ef3addcc522a5154c730eace7313/jetified-qisdk-model-1.7.5/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/dc43ef3addcc522a5154c730eace7313/jetified-qisdk-model-1.7.5/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/dc43ef3addcc522a5154c730eace7313/jetified-qisdk-model-1.7.5/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.aldebaran/qisdk-model/1.7.5/79853144114d837045ee4c5ce50d2edb3d43a239/qisdk-model-1.7.5-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.aldebaran/qisdk-model/1.7.5/eae8e51579a247501e530bae432181a2c84b3acc/qisdk-model-1.7.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

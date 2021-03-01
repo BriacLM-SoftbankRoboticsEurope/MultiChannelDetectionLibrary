@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_marginBottom="?attr/actionBarSize"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Medium Text"
+                android:textSize="@dimen/text_size"
+                android:id="@+id/text"
+                android:paddingLeft="10dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:textColor="@color/font_color"
+                android:paddingRight="10dp" />
+        </ScrollView>
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:text="@string/skip"
+        android:id="@+id/ok"
+        android:textSize="@dimen/text_size"
+        android:layout_gravity="bottom"
+        android:background="@drawable/button_dialog"
+        android:textColor="@color/font_color" />
+</FrameLayout>

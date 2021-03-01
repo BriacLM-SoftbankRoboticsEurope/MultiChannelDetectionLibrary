@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.aldebaran:qisdk-conversationalcontent-volumecontrol:0.19.1-experimental-05@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/eef221a27a36d385889f22ded5ca670f/jetified-qisdk-conversationalcontent-volumecontrol-0.19.1-experimental-05/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/eef221a27a36d385889f22ded5ca670f/jetified-qisdk-conversationalcontent-volumecontrol-0.19.1-experimental-05/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/eef221a27a36d385889f22ded5ca670f/jetified-qisdk-conversationalcontent-volumecontrol-0.19.1-experimental-05/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.aldebaran/qisdk-conversationalcontent-volumecontrol/0.19.1-experimental-05/f3de9ecc3eecf0ef994622eb0e7f1ddd9613d51d/qisdk-conversationalcontent-volumecontrol-0.19.1-experimental-05-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.aldebaran/qisdk-conversationalcontent-volumecontrol/0.19.1-experimental-05/d7c6500ba3d296776d95cda8ac8867e7738f1f4a/qisdk-conversationalcontent-volumecontrol-0.19.1-experimental-05-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

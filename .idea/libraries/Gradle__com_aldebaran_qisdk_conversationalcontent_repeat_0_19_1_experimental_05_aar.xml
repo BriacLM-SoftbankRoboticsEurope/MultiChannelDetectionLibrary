@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.aldebaran:qisdk-conversationalcontent-repeat:0.19.1-experimental-05@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7ddbc604289394e665a547030ea504a0/jetified-qisdk-conversationalcontent-repeat-0.19.1-experimental-05/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7ddbc604289394e665a547030ea504a0/jetified-qisdk-conversationalcontent-repeat-0.19.1-experimental-05/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7ddbc604289394e665a547030ea504a0/jetified-qisdk-conversationalcontent-repeat-0.19.1-experimental-05/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.aldebaran/qisdk-conversationalcontent-repeat/0.19.1-experimental-05/f9260363bcac34a62f22ce793672c85af050a5f/qisdk-conversationalcontent-repeat-0.19.1-experimental-05-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.aldebaran/qisdk-conversationalcontent-repeat/0.19.1-experimental-05/5f34eefdcc7c787ce6934dcbe411f8f0ae19aee1/qisdk-conversationalcontent-repeat-0.19.1-experimental-05-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

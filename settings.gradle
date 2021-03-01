@@ -1,0 +1,3 @@
+include ':MultiChannelDetectionLibrary'//include ':FaceMaskDetection'
+rootProject.name = "Pepper Covid Assistant"
+include ':app'//, ':OpenCV'

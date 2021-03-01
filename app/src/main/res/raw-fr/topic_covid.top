@@ -1,0 +1,68 @@
+topic: ~topic_covid()
+
+proposal:%COVID_1
+Lavez-vous très régulièrement les mains ^execute(CovidExecutor, COVID_1) Toussez ou éternuez dans votre coude ou dans un mouchoir ^execute(CovidExecutor, COVID_2) Utilisez un mouchoir à usage unique et jetez-le ^execute(CovidExecutor, COVID_3) Saluez sans se serrer la main, évitez les embrassades ^execute(CovidExecutor, COVID_4)
+
+proposal:%WASH_1
+Se laver les mains pendant 30 secondes à l'eau et au savon\pau=1000\ ^execute(CovidExecutor, WASH_1) Frottez-vous les mains, paume contre paume\pau=1000\ ^execute(CovidExecutor, WASH_2) Lavez le dos des mains\pau=1000\ ^execute(CovidExecutor, WASH_3) Puis lavez entre les doigts \pau=1000\ ^execute(CovidExecutor, WASH_4) Lavez au niveau des articulations\pau=1000\ ^execute(CovidExecutor, WASH_5) Lavez aussi à la base des pouces\pau=1000\ ^execute(CovidExecutor, WASH_6) Lavez le bout des doigts et des ongles\pau=1000\ ^execute(CovidExecutor, WASH_7) Enfin séchez-vous les mains avec une serviette propre ou à l'air libre\pau=1000\ ^execute(CovidExecutor, WASH_8)
+
+proposal:%MASK_1
+Avant de mettre son masque il faut bien se laver les mains ^execute(CovidExecutor, MASK_1) Puis mettre les élastiques derrières les oreilles ^execute(CovidExecutor, MASK_2) Ou nouer les lacets derrières la tête et le cou ^execute(CovidExecutor, MASK_3) Et pincer le bord rigide au niveau du nez, s’il y en a un, et abaisser le masque en dessous du menton ^execute(CovidExecutor, MASK_4) Pour l'enlever lavez-vous les mains et enlevez le masque en ne touchant que les lacets ou les élastiques ^execute(CovidExecutor, MASK_5) Après utilisation, le mettre dans un sac plastique et le jeter ^execute(CovidExecutor, MASK_6) S’il est en tissu, le laver à 60 degrées celsius pendant 30 min ^execute(CovidExecutor, MASK_7) Et enfin il faut bien se laver les mains à nouveau ^execute(CovidExecutor, MASK_8)
+
+proposal:%SYMPTOM_1
+Fièvre\pau=1000\ ^execute(CovidExecutor, SYMPTOM_1) Toux\pau=1000\ ^execute(CovidExecutor, SYMPTOM_2)  Essouflement\pau=1000\ ^execute(CovidExecutor, SYMPTOM_3) Perte de l'odorat\pau=1000\ ^execute(CovidExecutor, SYMPTOM_4)
+
+proposal:%END_SLIDE
+Voulez-vous voir un autre message ?
+    u1:(~oui) Bien sûr, Choisissez un sujet!
+    u1:(~non) Ok, pas de soucis!
+
+proposal:%HELLO_1
+Bonjour voulez-vous en savoir plusse concernant les moyens de protection face au coronavirusse ?
+    u1:(~oui) ~confirmation ^execute(ActionExecutor, protective_measure)
+    u1:(~non) Ok, pas de soucis!
+
+proposal:%HELLO_2
+Bonjour voulez-vous en savoir plusse concernant la manière de mettre et d'enlever son masque ?
+    u1:(~oui) ~confirmation ^execute(ActionExecutor, mask)
+    u1:(~non) Ok, pas de soucis!
+
+proposal:%HELLO_3
+Bonjour voulez-vous en savoir plusse concernant la façon de se laver les mains ?
+    u1:(~oui) ~confirmation ^execute(ActionExecutor, wash_hands)
+    u1:(~non) Ok, pas de soucis!
+
+proposal:%HELLO_4
+Bonjour voulez-vous en connaître les différents symtômes du coronavirusse ?
+    u1:(~oui) ~confirmation ^execute(ActionExecutor, symptoms)
+    u1:(~non) Ok, pas de soucis!
+
+u:(["~can_you parler" parle parlons] anglais) Es-tu sûr de vouloir parler anglais?
+        u1:(~oui) Bien sûr, allons-y! ^execute(LanguageExecutor, switch_to_english)
+        u1:(~non) Ok, pas de soucis!
+
+u:({les} gestes barrière) ~confirmation ^execute(ActionExecutor, protective_measure)
+u:({~vouloir} {~devoir} {voir} {les} gestes barrière) ~confirmation ^execute(ActionExecutor, protective_measure)
+u:({~can_you} {me} montrer {les} gestes barrières) ~confirmation ^execute(ActionExecutor, protective_measure)
+
+u:({Comment} {ce} laver les mains) ~confirmation ^execute(ActionExecutor, wash_hands)
+u:({~vouloir} {~devoir} {voir} {comment} {ce} laver les mains) ~confirmation ^execute(ActionExecutor, wash_hands)
+u:({~can_you} {me} montrer {comment} {ce} laver les mains) ~confirmation ^execute(ActionExecutor, wash_hands)
+
+u:({comment} mettre {et} enlever {mon}{son}{ton}{notre}{votre} masque) ~confirmation ^execute(ActionExecutor, mask)
+u:({~vouloir} {~devoir} {voir} {comment} mettre {et} enlever {mon}{son}{ton}{notre}{votre} masque) ~confirmation ^execute(ActionExecutor, mask)
+u:({~can_you} {me} montrer {comment} mettre {et} enlever {mon}{son}{ton}{notre}{votre} masque) ~confirmation ^execute(ActionExecutor, mask)
+u:({comment} mettre {mon}{son}{ton}{notre}{votre} masque) ~confirmation ^execute(ActionExecutor, mask)
+u:({~vouloir} {~devoir} {voir} {comment} mettre {mon}{son}{ton}{notre}{votre} masque) ~confirmation ^execute(ActionExecutor, mask)
+u:({~can_you} {me} montrer {comment} mettre {mon}{son}{ton}{notre}{votre} masque) ~confirmation ^execute(ActionExecutor, mask)
+u:({comment} enlever {mon}{son}{ton}{notre}{votre} masque) ~confirmation ^execute(ActionExecutor, remove_mask)
+u:({~vouloir} {~devoir} {voir} {comment} enlever {mon}{son}{ton}{notre}{votre} masque) ~confirmation ^execute(ActionExecutor, mask)
+u:({~can_you} {me} montrer {comment} enlever {mon}{son}{ton}{notre}{votre} masque) ~confirmation ^execute(ActionExecutor, mask)
+
+
+
+u:({la} liste {des} symptomes) ~confirmation ^execute(ActionExecutor, symptoms)
+u:({~vouloir} {~devoir} {voir} {la} liste {des} symptomes) ~confirmation ^execute(ActionExecutor, symptoms)
+u:({~can_you} {me} montrer {la} liste {des} symptomes) ~confirmation ^execute(ActionExecutor, symptoms)
+
+u:(ignorer) ~confirmation ^execute(ActionExecutor, skip)

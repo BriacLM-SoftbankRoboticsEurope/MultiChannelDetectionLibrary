@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.softbankrobotics-labs.pepper-mask-detection:FaceMaskDetection:master-SNAPSHOT@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/57b6e288e881675c16865f7fe9cf3836/jetified-FaceMaskDetection-master-SNAPSHOT/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b9cd372f25bc7ce78173130b88485661/jetified-FaceMaskDetection-master-SNAPSHOT/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2db3b9c820ea5feee99e677b16a6ab7a/jetified-FaceMaskDetection-master-SNAPSHOT/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2db3b9c820ea5feee99e677b16a6ab7a/jetified-FaceMaskDetection-master-SNAPSHOT/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2db3b9c820ea5feee99e677b16a6ab7a/jetified-FaceMaskDetection-master-SNAPSHOT/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.softbankrobotics-labs.pepper-mask-detection/FaceMaskDetection/master-SNAPSHOT/f8b0406c1769d6f840d4b7efaa06aacfcff4afff/FaceMaskDetection-master-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

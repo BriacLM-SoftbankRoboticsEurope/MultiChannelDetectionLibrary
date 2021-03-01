@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Pepper_Covid_Assistant.iml" filepath="$PROJECT_DIR$/.idea/modules/Pepper_Covid_Assistant.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/humandetection/Pepper_Covid_Assistant.MultiChannelDetectionLibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/humandetection/Pepper_Covid_Assistant.MultiChannelDetectionLibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Pepper_Covid_Assistant.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Pepper_Covid_Assistant.app.iml" />
+    </modules>
+  </component>
+</project>

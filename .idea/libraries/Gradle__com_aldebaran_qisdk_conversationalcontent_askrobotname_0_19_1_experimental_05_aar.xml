@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.aldebaran:qisdk-conversationalcontent-askrobotname:0.19.1-experimental-05@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1e6ab796b2d31a0a964fd22f0f44a542/jetified-qisdk-conversationalcontent-askrobotname-0.19.1-experimental-05/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1e6ab796b2d31a0a964fd22f0f44a542/jetified-qisdk-conversationalcontent-askrobotname-0.19.1-experimental-05/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/1e6ab796b2d31a0a964fd22f0f44a542/jetified-qisdk-conversationalcontent-askrobotname-0.19.1-experimental-05/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.aldebaran/qisdk-conversationalcontent-askrobotname/0.19.1-experimental-05/4ddb44d8ae96fe9594e59e8df30fd1d77df3ddbc/qisdk-conversationalcontent-askrobotname-0.19.1-experimental-05-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.aldebaran/qisdk-conversationalcontent-askrobotname/0.19.1-experimental-05/f9408a4eb4c7d60616f3019be73e1100acd7a5e5/qisdk-conversationalcontent-askrobotname-0.19.1-experimental-05-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

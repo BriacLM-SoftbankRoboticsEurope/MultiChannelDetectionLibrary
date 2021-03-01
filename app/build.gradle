@@ -1,0 +1,71 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId "com.softbankrobotics.peppercovidassistant"
+        minSdkVersion 23
+        targetSdkVersion 29
+        versionCode 19
+        versionName "1.5.6"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include "x86", "armeabi-v7a"
+            universalApk false
+        }
+    }
+}
+
+dependencies {
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'com.aldebaran:qisdk:1.7.5'
+    implementation 'com.aldebaran:qisdk-design:1.7.5'
+
+    // CONVERSATIONAL CONTENT
+    implementation 'com.aldebaran:qisdk-conversationalcontent:0.19.1-experimental-05'
+    implementation 'com.aldebaran:qisdk-conversationalcontent-greetings:0.19.1-experimental-05'
+    implementation 'com.aldebaran:qisdk-conversationalcontent-askrobotname:0.19.1-experimental-05'
+    implementation 'com.aldebaran:qisdk-conversationalcontent-robotabilities:0.19.1-experimental-05'
+    implementation 'com.aldebaran:qisdk-conversationalcontent-notunderstood:0.19.1-experimental-05'
+    implementation 'com.aldebaran:qisdk-conversationalcontent-repeat:0.19.1-experimental-05'
+    implementation 'com.aldebaran:qisdk-conversationalcontent-volumecontrol:0.19.1-experimental-05'
+
+    //Google Gms Services
+    implementation 'com.google.android.gms:play-services-vision:20.1.3'
+
+    implementation project(':MultiChannelDetectionLibrary')
+
+}

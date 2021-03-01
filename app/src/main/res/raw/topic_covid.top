@@ -1,0 +1,69 @@
+topic: ~topic_covid()
+
+proposal:%COVID_1
+Wash your hand regularly\pau=1000\ ^execute(CovidExecutor, COVID_1) Cough or sneeze in your elbow or in a tissue ^execute(CovidExecutor, COVID_2) Use a disposable tissue and then throw it in a trash bin ^execute(CovidExecutor, COVID_3) Avoid handshake and hug\pau=1000\ ^execute(CovidExecutor, COVID_4)
+
+proposal:%WASH_1
+Use soap\pau=1000\ ^execute(CovidExecutor, WASH_1) Palm to palm\pau=1000\ ^execute(CovidExecutor, WASH_2) Right palm over left dorsum with interlaced fingers and vice versa ^execute(CovidExecutor, WASH_3) Palm to palm with fingers interlaced\pau=1000\ ^execute(CovidExecutor, WASH_4) Back of fingers to opposing palms with fingers interlocked ^execute(CovidExecutor, WASH_5) Rotational rubbing of left thumb clasped in right palm and vice versa ^execute(CovidExecutor, WASH_6) Rotational rubbing, backward and forward with clasped fingers of right hand in left palm and vice versa ^execute(CovidExecutor, WASH_7) Dry your hands\pau=1000\ ^execute(CovidExecutor, WASH_8)
+
+proposal:%MASK_1
+First, wash your hands\pau=1000\ ^execute(CovidExecutor, MASK_1) Then place a loop around each ear\pau=1000\ ^execute(CovidExecutor, MASK_2) Or tied your mask behind your head and neck ^execute(CovidExecutor, MASK_3) Pinch nose clips on your nose\pau=1000\ ^execute(CovidExecutor, MASK_4) Wash your hands then hold both of the ear loops and lift and remove the mask ^execute(CovidExecutor, MASK_5) Throw the mask in the trash\pau=1000\ ^execute(CovidExecutor, MASK_6) If your mask is in tissu wash it at 60 Degree Celsius for 30 minutes ^execute(CovidExecutor, MASK_7) And wash your hands again\pau=1000\ ^execute(CovidExecutor, MASK_8)
+
+proposal:%SYMPTOM_1
+Fever\pau=1000\ ^execute(CovidExecutor, SYMPTOM_1) Cough\pau=1000\ ^execute(CovidExecutor, SYMPTOM_2) Shortness Of Breath\pau=1000\ ^execute(CovidExecutor, SYMPTOM_3) Loss Of Smell\pau=1000\ ^execute(CovidExecutor, SYMPTOM_4)
+
+proposal:%END_SLIDE
+Would you like to see a different message ?
+        u1:(~yes) Ok, Please choose a topic!
+        u1:(~no) OK, no problem.
+
+proposal:%HELLO_1
+Hello, would you like to know more about how to protect yourself and other from the coronavirus ?
+        u1:(~yes) ~confirmation ^execute(ActionExecutor, protective_measure)
+        u1:(~no) OK, no problem.
+
+proposal:%HELLO_2
+Hello, would you like to know how to wash your hands ?
+        u1:(~yes) ~confirmation ^execute(ActionExecutor, wash_hands)
+        u1:(~no) OK, no problem.
+
+proposal:%HELLO_3
+Hello, would you like to know how to put and take off your mask ?
+        u1:(~yes) ~confirmation ^execute(ActionExecutor, mask)
+        u1:(~no) OK, no problem.
+
+proposal:%HELLO_4
+Hello, would you like to know the list of symptoms ?
+        u1:(~yes) ~confirmation ^execute(ActionExecutor, symptoms)
+        u1:(~no) OK, no problem.
+
+u:({~can_you} speak in French) Are you sure you want to change to French?
+        u1:(~yes) Ok, let's go! ^execute(LanguageExecutor, switch_to_french)
+        u1:(~no) OK, no problem.
+
+u:({the} protective measures) ~confirmation ^execute(ActionExecutor, protective_measure)
+u:({~i_want_to} {~i_need_to} see the protective measures) ~confirmation ^execute(ActionExecutor, protective_measure)
+u:({~can_you} show me the protective measures) ~confirmation ^execute(ActionExecutor, protective_measure)
+
+u:({how to} wash hands) ~confirmation ^execute(ActionExecutor, wash_hands)
+u:({~i_want_to} {~i_need_to} {see} {how} {to} wash {my}{your} hands) ~confirmation ^execute(ActionExecutor, wash_hands)
+u:({~can_you} show me {how} {to} wash {my}{your} hands) ~confirmation ^execute(ActionExecutor, wash_hands)
+
+u:({how to} put {my}{your} and take {my}{your} mask off) ~confirmation ^execute(ActionExecutor, mask)
+u:({~i_want_to} {~i_need_to} {see} {how} {to} put {my}{your} and take {my}{your} mask off) ~confirmation ^execute(ActionExecutor, mask)
+u:({~can_you} show me {how} {to} put {my}{your} and take {my}{your} mask off) ~confirmation ^execute(ActionExecutor, mask)
+u:({how to} put {my}{your} mask on) ~confirmation ^execute(ActionExecutor, mask)
+u:({~i_want_to} {~i_need_to} {see} {how} {to} put {my}{your} mask on) ~confirmation ^execute(ActionExecutor, mask)
+u:({~can_you} show me {how} {to} put {my}{your} mask on) ~confirmation ^execute(ActionExecutor, mask)
+u:({how to} take {my}{your} mask off) ~confirmation ^execute(ActionExecutor, mask)
+u:({~i_want_to} {~i_need_to} {see} {how} {to} take {my}{your} mask off) ~confirmation ^execute(ActionExecutor, mask)
+u:({~can_you} show me {how} {to} take {my}{your} mask off) ~confirmation ^execute(ActionExecutor, mask)
+
+
+{~can_you} show me how to put my/your and take my/your mask off
+
+u:({the} list {of} symptoms) ~confirmation ^execute(ActionExecutor, symptoms)
+u:({~i_want_to} {~i_need_to} {see} {the} list {of} symptoms) ~confirmation ^execute(ActionExecutor, symptoms)
+u:({~can_you} {show} {me} {the} list {of} symptoms) ~confirmation ^execute(ActionExecutor, symptoms)
+
+u:(skip) ~confirmation ^execute(ActionExecutor, skip)

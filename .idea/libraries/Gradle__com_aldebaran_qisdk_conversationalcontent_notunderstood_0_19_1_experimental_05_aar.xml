@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.aldebaran:qisdk-conversationalcontent-notunderstood:0.19.1-experimental-05@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/14b472e6d1d2009991c37140aaeab1d8/jetified-qisdk-conversationalcontent-notunderstood-0.19.1-experimental-05/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/14b472e6d1d2009991c37140aaeab1d8/jetified-qisdk-conversationalcontent-notunderstood-0.19.1-experimental-05/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/14b472e6d1d2009991c37140aaeab1d8/jetified-qisdk-conversationalcontent-notunderstood-0.19.1-experimental-05/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.aldebaran/qisdk-conversationalcontent-notunderstood/0.19.1-experimental-05/907927c3cd42d29697bf92c25b4eda05d69806e/qisdk-conversationalcontent-notunderstood-0.19.1-experimental-05-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.aldebaran/qisdk-conversationalcontent-notunderstood/0.19.1-experimental-05/b0d2cc450b63ee2b495b4c66ed2989b62a74a991/qisdk-conversationalcontent-notunderstood-0.19.1-experimental-05-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".MainActivity">
+    <FrameLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="90dp">
+        <ImageView
+            android:src="@drawable/ic_logo_sbr"
+            android:adjustViewBounds="true"
+            android:layout_margin="5dp"
+            android:contentDescription="@string/description_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+    </FrameLayout>
+    <ImageButton
+        android:layout_alignParentEnd="true"
+        android:id="@+id/button_language"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/lang_uk"
+        android:contentDescription="@string/description_logo"
+        android:background="@color/white"/>
+    <LinearLayout
+        android:id="@+id/view_lang_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="90dp"
+        android:layout_alignParentEnd="true">
+        <ImageButton
+            android:id="@+id/button_lang_1"
+            android:contentDescription="@string/description_logo"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/lang_fr"
+            android:background="@color/white" />
+        <ImageButton
+            android:id="@+id/button_lang_2"
+            android:layout_width="90dp"
+            android:contentDescription="@string/description_logo"
+            android:layout_height="90dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/lang_uk"
+            android:background="@color/white"/>
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:layout_marginTop="90dp"
+        android:id="@+id/activity_main_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+</RelativeLayout>

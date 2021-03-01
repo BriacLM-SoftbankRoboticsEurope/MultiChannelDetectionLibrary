@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.aldebaran:qisdk-conversationalcontent-greetings:0.19.1-experimental-05@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/706e08906d9a9d60632eae35bb236156/jetified-qisdk-conversationalcontent-greetings-0.19.1-experimental-05/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/706e08906d9a9d60632eae35bb236156/jetified-qisdk-conversationalcontent-greetings-0.19.1-experimental-05/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/706e08906d9a9d60632eae35bb236156/jetified-qisdk-conversationalcontent-greetings-0.19.1-experimental-05/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.aldebaran/qisdk-conversationalcontent-greetings/0.19.1-experimental-05/58c36928bab850168eb962c3dc4ca0a10bde4a9b/qisdk-conversationalcontent-greetings-0.19.1-experimental-05-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.aldebaran/qisdk-conversationalcontent-greetings/0.19.1-experimental-05/5b2a94261fe9c980f8c9a02a6331f060278c80fa/qisdk-conversationalcontent-greetings-0.19.1-experimental-05-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

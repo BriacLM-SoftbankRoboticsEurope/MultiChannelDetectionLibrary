@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pepper Covid Assistant</string>
+
+    <string name="message_camera_permission">Your permission is required.</string>
+    <string name="warning">Warning</string>
+    <string name="skip">\"SKIP\"</string>
+    <string name="symptoms">\"List Of Symptoms\"</string>
+    <string name="mask">\"How To Put On/Take Off Your Mask\"</string>
+    <string name="wash">\"How To Wash Your Hands\"</string>
+    <string name="protective">\"Protective Measure\"</string>
+    <string name="put_mask_on">Please put a mask on</string>
+    <string name="close_charging_flap">Please close the Charging Flap.</string>
+    <string name="title_information">Information</string>
+    <string name="title_coronavirus_covid_19">
+        CORONAVIRUS
+        \n
+        COVID-19
+    </string>
+    <string name="title_recommandations">Recommandations</string>
+    <string name="title_welcome">Welcome</string>
+    <string name="loading_message">Loading …</string>
+    <string name="message_build_chat">Building chat …</string>
+    <string name="message_mapping">Mapping …</string>
+    <string name="message_localizing">Localizing …</string>
+    <string name="description_logo">DescLogo</string>
+    <string name="action_image">action_image</string>
+</resources>
