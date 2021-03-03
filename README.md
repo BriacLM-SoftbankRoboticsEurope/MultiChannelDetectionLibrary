@@ -6,6 +6,26 @@ The module HumanDetection use both the native detection with the QiSDK and the l
 
 ## How it work
 
+Add JitPack repository to your build file:
+Add it in your root build.gradle at the end of repositories:
+
+```
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+Add the dependency on the face detection lib to your app build.gradle in the dependencies section:
+
+```
+dependencies {
+	implementation 'com.github.BriacLM-SoftbankRoboticsEurope:MultiChannelDetectionLibrary:1.1'
+}
+```
+
 To use this library you first need to implement the interface HumanDetectionCallbacks to your MainActivity with two members variable context and humanDetection
 
 ```kotlin
