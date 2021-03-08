@@ -22,7 +22,7 @@ Add the dependency on the face detection lib to your app build.gradle in the dep
 
 ```
 dependencies {
-	implementation 'com.github.BriacLM-SoftbankRoboticsEurope:MultiChannelDetectionLibrary:1.1'
+	implementation 'com.github.BriacLM-SoftbankRoboticsEurope:MultiChannelDetectionLibrary:1.6'
 }
 ```
 
@@ -57,7 +57,6 @@ override fun onResume() {
     if (this.multiChannelDetection != null) {
         this.multiChannelDetection?.onResume(this)
         this.multiChannelDetection?.isRobotReady = false
-        this.chatIsReady = false
     }
 }
 ```
@@ -80,6 +79,35 @@ override fun onRobotFocusLost() {
         this.multiChannelDetection?.onRobotFocusLost()
     }
 }
+```
+
+List of options
+
+```kotlin
+    // Directory where store the map (Map and localize)
+    var filesDirectoryPath: String? = null
+    // Save intial orientation
+    var saveInitialPosition = true
+    // Use the head camera (true) or the tablet camera (false) to use the mask detection
+    this.multiChannelDetection?.useHeadCamera = true
+    // Hold pepper base when he is not engaged with a user
+    this.multiChannelDetection?.holdBase = true
+    // Turn pepper to the initial orientation when he is localized
+    this.multiChannelDetection?.turnToInitialPosition = true
+    // Charging flap state change detection
+    this.multiChannelDetection?.useChargingFlapDetection = true
+    // Use the HumanAwarness from the QiSDK
+    this.multiChannelDetection?.useHumanDetection = true
+    // Use the FaceMask Detection from the library
+    this.multiChannelDetection?.useFaceMaskDetection = true
+    // Use the onEngagedHumanChangedListener from HumanAwarness
+    this.multiChannelDetection?.useEngagedHumanChangedListener = true
+    // Use the onRecommendedHumanToEngageChangedListener from HumanAwarness
+    this.multiChannelDetection?.useRecommendedHumanToEngageChangedListener = true
+    // Use the onHumansAroundChangedListener from HumanAwarness
+    this.multiChannelDetection?.useHumansAroundChangedListener = true
+    // Map the surrounding Environement and localize into it
+    this.multiChannelDetection?.hasToLocalizeAndMap = true
 ```
 
 ## Application

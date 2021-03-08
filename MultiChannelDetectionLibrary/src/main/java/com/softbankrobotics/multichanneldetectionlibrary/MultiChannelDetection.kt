@@ -75,6 +75,8 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
     var useHeadCamera : Boolean = false
     // Directory where store the map
     var filesDirectoryPath: String? = null
+    // Save intial orientation
+    var saveInitialPosition = true
     // HOLD BASE
     var holdBase : Boolean = false
     // TURN TO INTIAL POSITION
@@ -107,7 +109,8 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
         filesDirectoryPath = "${Environment.getExternalStorageDirectory().absolutePath}/Maps"
         if (permissionAlreadyGranted())
             saveFileHelper = SaveFileHelper()
-        saveInitialPosition()
+        if (saveInitialPosition)
+            saveInitialPosition()
         if (useChargingFlapDetection)
             initializeChargingFlapDetection()
         if (hasToLocalizeAndMap) {
@@ -154,7 +157,6 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
                 if (isRobotReady) {
                     val sortedFacesFilter = arrayListOf<FaceDetected>()
                     sortedFaces.forEach {
-                        it.confidence
                         sortedFacesFilter.add(FaceDetected(it.hasMask, it.picture, it.confidence))
                     }
                     activity?.onHumanDetected(null, sortedFacesFilter)
