@@ -92,7 +92,7 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
     // Use HumanAround
     var useHumansAroundChangedListener = false
     // Launch Localize and Map
-    var hasToLocalizeAndMap = false
+    var hasToLocalizeAndMap = true
 
     // Hold Abilities
     private var holder : Holder? = null
