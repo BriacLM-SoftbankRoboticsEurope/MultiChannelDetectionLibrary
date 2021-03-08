@@ -71,14 +71,28 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
     private var humanEngaged : Boolean = false // Is pepper engaged with someone used to change the sensitivity of the mask detection
 
     //-------------------- OPTION-------------------
-    var useHeadCamera : Boolean = false // Use Top/Head camera or Bottom/Tablet Camera
-    private var filesDirectoryPath: String? = null // Directory where store the map
+    // Use Top/Head camera or Bottom/Tablet Camera
+    var useHeadCamera : Boolean = false
+    // Directory where store the map
+    var filesDirectoryPath: String? = null
     // HOLD BASE
     var holdBase : Boolean = false
     // TURN TO INTIAL POSITION
     var turnToInitialPosition = true
+    // Use ChargingFlapDetection
+    var useChargingFlapDetection = true
+    // Use Human Detection / Human Awarness
+    var useHumanDetection = true
+    // Use FaceMask Detection
+    var useFaceMaskDetection = true
+    // Use HumanAround
+    var useEngagedHumanChangedListener = true
+    // Use HumanAround
+    var useRecommendedHumanToEngageChangedListener = true
     // Use HumanAround
     var useHumansAroundChangedListener = false
+    // Launch Localize and Map
+    var hasToLocalizeAndMap = false
 
     // Hold Abilities
     private var holder : Holder? = null
@@ -94,11 +108,18 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
         if (permissionAlreadyGranted())
             saveFileHelper = SaveFileHelper()
         saveInitialPosition()
-        initializeChargingFlapDetection()
-        if (!isChargingFlapOpen())
-            startMapAndLocalizeWithExistingMap()
-        initializeHumanDetection()
-        initializeFaceMaskDetection()
+        if (useChargingFlapDetection)
+            initializeChargingFlapDetection()
+        if (hasToLocalizeAndMap) {
+            if (!isChargingFlapOpen())
+                startMapAndLocalizeWithExistingMap()
+        }
+        if (useHumanDetection)
+            initializeHumanDetection()
+        if (useFaceMaskDetection)
+            initializeFaceMaskDetection()
+        if (!hasToLocalizeAndMap)
+            ready()
     }
 
     fun onRobotFocusLost() {
@@ -188,13 +209,17 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
     private fun initializeHumanDetection(){
         this.humanAwareness= qiContext?.humanAwareness
 
-        this.humanAwareness?.async()?.addOnEngagedHumanChangedListener { human ->
-            Log.d(TAG, "EngagedHumanChangedListener Event")
-            humanToEngage(human)
+        if (useEngagedHumanChangedListener) {
+            this.humanAwareness?.async()?.addOnEngagedHumanChangedListener { human ->
+                Log.d(TAG, "EngagedHumanChangedListener Event")
+                humanToEngage(human)
+            }
         }
-        this.humanAwareness?.async()?.addOnRecommendedHumanToEngageChangedListener { human ->
-            Log.d(TAG, "RecommendedHumanToEngageChangedListener Event")
-            humanToEngage(human)
+        if (useRecommendedHumanToEngageChangedListener) {
+            this.humanAwareness?.async()?.addOnRecommendedHumanToEngageChangedListener { human ->
+                Log.d(TAG, "RecommendedHumanToEngageChangedListener Event")
+                humanToEngage(human)
+            }
         }
         if (useHumansAroundChangedListener) {
             this.humanAwareness?.async()
@@ -272,6 +297,10 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
      */
     private fun restartMapping(localizeFromExistingMap : Boolean) {
         Log.d(TAG, "Restart Mapping")
+        if (!hasToLocalizeAndMap) {
+            ready()
+            return
+        }
         cancelMappingAndLocalize()
         if (localizeFromExistingMap && tryToLocalizeOnExistingMap < TRY_TO_LOCALIZE_EXISTING_MAP_LIMIT)
             startMapAndLocalizeWithExistingMap()
@@ -298,6 +327,10 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
      */
     private fun startMapAndLocalizeWithExistingMap() {
         val mapData: StreamableBuffer?
+        if (!hasToLocalizeAndMap) {
+            ready()
+            return
+        }
         if (permissionAlreadyGranted()) {
             mapData = saveFileHelper?.readStreamableBufferFromFile(filesDirectoryPath, mapFileName)
             if (mapData != null)
@@ -313,6 +346,10 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
      * @param mapData: StreamableBuffer
      */
     private fun useExistingMap(mapData: StreamableBuffer?) {
+        if (!hasToLocalizeAndMap) {
+            ready()
+            return
+        }
         if (mapData != null) {
             ++tryToLocalizeOnExistingMap
             Log.d(TAG, "loadMap")
@@ -330,6 +367,10 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
      * Start the mapping of the environment
      */
     private fun startMapping() {
+        if (!hasToLocalizeAndMap) {
+            ready()
+            return
+        }
         Log.d(TAG, "startMapping")
         tryToLocalize++
         activity?.onStepReach(MAPPING, false)
