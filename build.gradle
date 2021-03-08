@@ -1,4 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply plugin: 'maven'
+
+group = 'com.github.BriacLM-SoftbankRoboticsEurope'
+
 buildscript {
     ext.kotlin_version = "1.4.21"
     repositories {
@@ -22,8 +26,4 @@ allprojects {
         maven { url 'https://qisdk.softbankrobotics.com/experimental/maven' }
         maven { url 'https://jitpack.io' }
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
