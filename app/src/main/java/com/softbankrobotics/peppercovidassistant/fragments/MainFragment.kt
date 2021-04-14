@@ -8,6 +8,7 @@ import com.aldebaran.qi.sdk.util.FutureUtils
 import com.softbankrobotics.peppercovidassistant.MainActivity
 import com.softbankrobotics.peppercovidassistant.R
 import com.softbankrobotics.peppercovidassistant.fragments.dialog.ImageDialog
+import java.lang.Exception
 
 class MainFragment : BaseRobotFragment() {
 
@@ -64,13 +65,20 @@ class MainFragment : BaseRobotFragment() {
     private fun animationScaleUpDown(view : View, value : Float) : Runnable {
         animIsLaunch = true
         return Runnable {
+            try {
             if (!stopAnim)
                 view.animate().scaleX(value).scaleY(value).setDuration(500).withEndAction(animationScaleUpDown(view, if (value == 1F) 2F else 1F))
             else {
                 if (value == 1F)
                     view.animate().scaleX(1F).scaleY(1F).setDuration(500)
                 animIsLaunch = false
-            }}
+                }
+            } catch (e: Exception) {
+                animIsLaunch = false
+                view.animate().scaleX(1F).scaleY(1F).setDuration(500)
+                e.printStackTrace()
+            }
+        }
     }
 
     override fun onDestroy() {
