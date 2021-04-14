@@ -187,44 +187,6 @@ class ChatData(
         }
     }
 
-    fun goToBookmarkAsync(bookmark: String, topic: String) {
-        if (bookmark.isEmpty()) {
-            Log.w(TAG, "bookmark cannot be empty")
-            return
-        }
-
-        val tmp = bookmarks[topic]
-        if (tmp == null) {
-            Log.w(TAG, String.format("Could not find topic %s", topic))
-            return
-        }
-
-        Executors.newSingleThreadExecutor().execute {
-
-            if (topic != this.qiChatbot.async().focusedTopic?.value?.name?:"") {
-                if (this.qiChatbot.async().focusedTopic.value != null) {
-                    Log.d(TAG, "Disables topic ${this.qiChatbot.async().focusedTopic.value.name}")
-                    this.qiChatbot.async().topicStatus(this.qiChatbot.async().focusedTopic.value).value.enabled = true
-                }
-                Log.d(TAG, "Enables topic $topic")
-                this.qiChatbot.async().topicStatus(this.topics[topic]).value.enabled = true
-            }else{
-                Log.d(TAG, "Enables topic $topic")
-                this.qiChatbot.async().topicStatus(this.topics[topic]).value.enabled = true
-            }
-
-            Log.d(TAG, "going to bookmark $bookmark in topic : $topic")
-            currentGotoBookmarkFuture?.thenConsume { uselessFuture ->
-                if(uselessFuture.hasError()) Log.d(TAG, uselessFuture.errorMessage)
-                currentGotoBookmarkFuture = qiChatbot.async().goToBookmark(
-                    tmp[bookmark],
-                    AutonomousReactionImportance.HIGH,
-                    AutonomousReactionValidity.IMMEDIATE
-                )
-            }
-        }
-    }
-
     fun cancelCurrentGotoBookmarkFuture(): Future<Void> {
         if (currentGotoBookmarkFuture == null) return Future.of(null)
         //currentGotoBookmarkFuture!!.cancel(true)

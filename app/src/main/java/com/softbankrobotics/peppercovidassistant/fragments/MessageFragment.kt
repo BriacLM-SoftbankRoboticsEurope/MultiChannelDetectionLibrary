@@ -30,7 +30,7 @@ class MessageFragment : BaseRobotFragment() {
 
     /**********************************CovidInfo*************************************************/
     private var messageData = messageDataFrenchProtectiveMeasures
-    private lateinit var messagePlayers : List<Pair<String, Int>>
+    private var messagePlayers : List<Pair<String, Int>>? = null
     private var prefix = PREFIX_MEASURE
 
     var MESSAGE_ID = 0
@@ -119,9 +119,13 @@ class MessageFragment : BaseRobotFragment() {
      */
     fun showMessage(index: Int) {
         currentMessageIndex = index
-        if (currentMessageIndex > messagePlayers.size)
+        if (messagePlayers == null) {
+            mainActivity.showFragment(MainActivity.ID_FRAGMENT_MAIN)
             return
-        this.message = messagePlayers[currentMessageIndex - 1]
+        }
+        if (currentMessageIndex > messagePlayers?.size!!)
+            return
+        this.message = messagePlayers!![currentMessageIndex - 1]
         showCurrentMessage()
     }
 

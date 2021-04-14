@@ -15,8 +15,6 @@ class MainFragment : BaseRobotFragment() {
         private const val TAG = "MSI_MAIN_FRAGMENT"
     }
 
-    var sayHello = false
-
     private var animIsLaunch = false
     private var stopAnim = false
 
@@ -53,14 +51,7 @@ class MainFragment : BaseRobotFragment() {
                 mainActivity.showFragment(MainActivity.ID_FRAGMENT_MESSAGE, "3")
             }, ImageDialog.TIME)
         }
-        if (sayHello)
-            FutureUtils.futureOf {
-                mainActivity.goToBookmarkAsync("HELLO", "topic_covid")
-            }.thenConsume {
-                mainActivity.goToBookmarkAsync("HELLO_" + (1..4).random(), "topic_covid")
-            }
-        else
-            mainActivity.goToBookmark("HELLO_" + (1..4).random(), "topic_covid")
+        mainActivity.goToBookmark("HELLO_" + (1..4).random(), "topic_covid")
         FutureUtils.futureOf {
             mainActivity.currentChatData?.chat?.addOnHearingChangedListener { hearing ->
                 stopAnim = hearing.not()

@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
@@ -62,7 +63,7 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
     var fragment: BaseRobotFragment?=null           //The current displayed fragment
 
     /************************************Robot items********************************************/
-    private var itemBuilt : Boolean = false
+    var itemBuilt : Boolean = false
     var qiContext:QiContext?=null
     private var chatDataList:HashMap<String, ChatData> = hashMapOf()    //HashMap with chat data (key : the locale string, entry : the chat data)
     var currentChatData: ChatData?=null                                 //The current running chat data
@@ -135,6 +136,10 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
 
     override fun onPause() {
         this.countDownNoInteraction.cancel()
+        if (this.fragment != null &&
+            this.fragment?.noTouchDialog != null &&
+            this.fragment?.noTouchDialog?.isVisible!!)
+            this.fragment?.noTouchDialog?.dismiss()
         super.onPause()
     }
 
@@ -153,11 +158,6 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
         this.currentChatData?.goToBookmark(bookmark, topic)
     }
 
-
-    fun goToBookmarkAsync(bookmark: String, topic: String) {
-        this.currentChatData?.goToBookmarkAsync(bookmark, topic)
-    }
-
     override fun onBookmarkReached(bookmark: Bookmark?) {}
 
     /**
@@ -167,11 +167,7 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
     fun showFragment(fragmentId: Int, vararg args: String) {
         when(fragmentId){
             ID_FRAGMENT_SPLASH -> this.fragment = SplashFragment()
-            ID_FRAGMENT_MAIN -> {
-                this.fragment = MainFragment()
-                if (this.currentFragmentId == ID_FRAGMENT_SPLASH)
-                    (this.fragment as MainFragment).sayHello = true
-            }
+            ID_FRAGMENT_MAIN -> this.fragment = MainFragment()
             ID_FRAGMENT_MESSAGE -> {
                 this.fragment = MessageFragment()
                 (this.fragment as MessageFragment).MESSAGE_ID = args.get(0).toInt()
@@ -519,14 +515,10 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
 
 
         languageContainer.setOnClickListener { v: View? ->
-            if (config?.locale?.language == "fr") {
-                if (itemBuilt)
-                    setLocale("en")
-            } else {
-                if (itemBuilt)
-                    setLocale("fr")
-            }
-            updateLangUI()
+            if (config?.locale?.language == "fr")
+                checkForLocal("en")
+            else
+                checkForLocal("fr")
         }
         updateLangUI()
     }
@@ -543,6 +535,14 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
                 buttonLang1.setImageDrawable(res?.getDrawable(R.drawable.ic_flagfr))
                 buttonLang2.setImageDrawable(res?.getDrawable(R.drawable.ic_flaguk))
             }
+        }
+    }
+
+    fun checkForLocal(lang: String) {
+        if (itemBuilt && ChatData.isLanguageAvailable(qiContext!!, Locale(lang)))
+            setLocale(lang)
+        else {
+            goToBookmark("LANG_UNAVAILABLE", "topic_covid")
         }
     }
 }

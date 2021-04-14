@@ -40,11 +40,11 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
         const val LOCALIZING = 1
     }
 
-    class FaceDetected (var hasMask: Boolean, var picture: Bitmap, var confidence: Double)
+    public class FaceDetected (var hasMask: Boolean, var picture: Bitmap, var confidence: Double)
 
     // Context
     private var qiContext : QiContext? = null
-    var activity : MultiChannelDetectionCallbacks? = activity
+    public var activity : MultiChannelDetectionCallbacks? = activity
 
     // Store the map.
     private var explorationMap: ExplorationMap? = null
@@ -61,39 +61,39 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
     private var initialPositionMapFrame: Frame? = null
 
     //Human awareness
-    var humanAwareness: HumanAwareness?=null
-    var faceMaskDetection: FaceMaskDetection? = null
+    public var humanAwareness: HumanAwareness?=null
+    public var faceMaskDetection: FaceMaskDetection? = null
 
     // -------------------- Ready -----------------
-    var isRobotReady: Boolean = false // Is pepper fully ready
-    var isRobotLocalize: Boolean = false // Is pepper localize
+    public var isRobotReady: Boolean = false // Is pepper fully ready
+    public var isRobotLocalize: Boolean = false // Is pepper localize
     private var humanEngaged : Boolean = false // Is pepper engaged with someone used to change the sensitivity of the mask detection
 
     //-------------------- OPTION-------------------
     // Use the head camera (true) or the tablet camera (false) to use the mask detection
-    var useHeadCamera : Boolean = false
+    public var useHeadCamera : Boolean = false
     // Directory where store the map (Map and localize)
-    var filesDirectoryPath: String? = null
+    public var filesDirectoryPath: String? = null
     // Save intial orientation (true)
-    var saveInitialPosition = true
+    public var saveInitialPosition = true
     // Turn pepper to the initial orientation when he is localized (true)
-    var turnToInitialPosition = true
+    public var turnToInitialPosition = true
     // Hold pepper base when he is not engaged with a user (true) or free the base (false)
-    var holdBase : Boolean = false
+    public var holdBase : Boolean = false
     // Charging flap state change detection event (true)
-    var useChargingFlapDetection = true
+    public var useChargingFlapDetection = true
     // Use the HumanAwarness from the QiSDK (true)
-    var useHumanDetection = true
+    public var useHumanDetection = true
     // Use the FaceMask Detection from the library (true)
-    var useFaceMaskDetection = true
+    public var useFaceMaskDetection = true
     // Use the onEngagedHumanChangedListener from HumanAwarness (true)
-    var useEngagedHumanChangedListener = true
+    public var useEngagedHumanChangedListener = true
     // Use the onRecommendedHumanToEngageChangedListener from HumanAwarness (true)
-    var useRecommendedHumanToEngageChangedListener = true
+    public var useRecommendedHumanToEngageChangedListener = true
     // Use the onHumansAroundChangedListener from HumanAwarness (true)
-    var useHumansAroundChangedListener = false
+    public var useHumansAroundChangedListener = false
     // Map the surrounding environment and localize into it (true)
-    var hasToLocalizeAndMap = true
+    public var hasToLocalizeAndMap = true
 
     // Hold Abilities
     private var holder : Holder? = null

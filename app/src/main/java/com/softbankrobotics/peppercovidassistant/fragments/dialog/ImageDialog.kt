@@ -24,6 +24,7 @@ class ImageDialog : AbstractDialog() {
     private var text = ""
 
     var handler = Handler()
+    var runnable : Runnable? = null
 
     companion object {
         const val TIME : Long = 5000
@@ -45,10 +46,17 @@ class ImageDialog : AbstractDialog() {
         return v
     }
 
+    override fun dismiss() {
+        if (runnable != null)
+            handler.removeCallbacks(runnable!!)
+        super.dismiss()
+    }
+
     fun defaultDelayed() {
-        handler.postDelayed({
+        runnable = Runnable {
             dismiss()
-        }, TIME)
+        }
+        handler.postDelayed(runnable!!, TIME)
     }
 
     /**

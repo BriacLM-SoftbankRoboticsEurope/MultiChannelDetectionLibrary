@@ -18,7 +18,7 @@ Voulez-vous voir un autre message ?
     u1:(~non) Ok, pas de soucis!
 
 proposal:%HELLO
-    Bonjour
+    Bonjour !
 
 proposal:%HELLO_1
 Voulez-vous en savoir plusse concernant les moyens de protection face au coronavirusse ?
@@ -39,6 +39,9 @@ proposal:%HELLO_4
 Voulez-vous en connaître les différents symtômes du coronavirusse ?
     u1:(~oui) ~confirmation ^execute(ActionExecutor, symptoms)
     u1:(~non) Ok, pas de soucis!
+
+proposal:%LANG_UNAVAILABLE
+Ooh non, cette langue n'est pas disponible
 
 u:(["~can_you parler" parle parlons] anglais) Es-tu sûr de vouloir parler anglais?
         u1:(~oui) Bien sûr, allons-y! ^execute(LanguageExecutor, switch_to_english)
