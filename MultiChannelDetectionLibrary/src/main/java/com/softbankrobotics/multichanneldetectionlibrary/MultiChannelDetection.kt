@@ -192,7 +192,7 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
         if (stateOpen)
             cancelMappingAndLocalize()
         Log.d(TAG, "Charging Flap Is Open : $stateOpen")
-        activity?.context?.runOnUiThread{
+        activity?.robotActivity?.runOnUiThread{
             activity?.onChargingFlapStateChanged(stateOpen)
         }
     }
@@ -385,13 +385,11 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
         localizeAndMap?.addOnStatusChangedListener {
             if (it == LocalizationStatus.LOCALIZED) {
                 Log.d(TAG,"localizeAndMap : Robot is Localized")
-                holdAbilities()?.thenConsume {
-                    animationToLookAround()?.thenConsume {
-                        Log.i(TAG, "Robot has mapped his environment.")
-                        releaseAbilities()
-                        // Cancel the LocalizeAndMap action.
-                        cancelMappingAndLocalize()
-                    }
+                animationToLookAround()?.thenConsume {
+                    Log.i(TAG, "Robot has mapped his environment.")
+                    releaseAbilities()
+                    // Cancel the LocalizeAndMap action.
+                    cancelMappingAndLocalize()
                 }
             }
         }
@@ -532,13 +530,13 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
      *  Detection of users with or without mask
      */
     private fun initializeFaceMaskDetection() {
-        if (activity?.context == null || qiContext == null)
+        if (activity?.robotActivity == null || qiContext == null)
             return
         Log.d(TAG, "maskDetector : FaceMaskDetection started")
         faceMaskDetection = FaceMaskDetection(
-            AizooFaceMaskDetector(activity?.context!!),
+            AizooFaceMaskDetector(activity?.robotActivity!!),
             if (useHeadCamera) TopCameraCapturer(qiContext!!)
-            else BottomCameraCapturer(activity?.context!!, activity?.context!!)
+            else BottomCameraCapturer(activity?.robotActivity!!, activity?.robotActivity!!)
         )
     }
 
@@ -548,7 +546,7 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
      * @return Boolean True or False if permission granted
      */
     private fun permissionAlreadyGranted(): Boolean {
-        return ContextCompat.checkSelfPermission(activity?.context!!,
+        return ContextCompat.checkSelfPermission(activity?.robotActivity!!,
             Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
     }
 }

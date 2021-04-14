@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Pepper Covid Assistant</string>
 
-    <string name="message_camera_permission">Votre permission est nécessaire.</string>
+    <string name="message_permission">Votre permission est nécessaire.</string>
     <string name="warning">Attention</string>
     <string name="skip">\"Ignorer\"</string>
     <string name="quote_mark">\"</string>

@@ -31,7 +31,7 @@ To use this library you first need to implement the interface HumanDetectionCall
 ```kotlin
 class MainActivity : RobotActivity(), MultiChannelDetectionCallbacks {
 
-    override var context: RobotActivity = this
+    override var robotActivity: RobotActivity = this
     var multiChannelDetection: MultiChannelDetection? = null
 
     ---
@@ -71,6 +71,8 @@ override fun onRobotFocusGained(qiContext: QiContext?) {
     this.multiChannelDetection?.useHeadCamera = true
     this.multiChannelDetection?.holdBase = true
     this.multiChannelDetection?.turnToInitialPosition = true
+
+    // /!\ Important : Start the library /!\
     this.multiChannelDetection?.onRobotFocusGained(qiContext)
 }
 
@@ -79,6 +81,64 @@ override fun onRobotFocusLost() {
         this.multiChannelDetection?.onRobotFocusLost()
     }
 }
+```
+
+Functions to implement on your RobotActivity
+
+```kotlin
+    /**
+     * Robot is Ready to engage : see HumanDetection
+     * Ready When robot has done : localize, map and chat
+     */
+    override fun onRobotReady(isRobotReady: Boolean)
+
+    /**
+     * @param step: Index of the step
+     * @param finished: State of the step
+     */
+    override fun onStepReach(step: Int, finished: Boolean) {
+    }
+
+    /**
+     * Listener Charging Flap State Changed
+     * @param open: Boolean -> state Open/Close
+     */
+    override fun onChargingFlapStateChanged(open: Boolean) {
+    }
+
+    /**
+     * @param human: Nullable -> Human detected by the normal function of the robot
+     * @param faces: Nullable -> Human detected by the library FaceMaskDetection
+    */
+    override fun onHumanDetected(human: Human?, faces: List<MultiChannelDetection.FaceDetected>?) {
+    }
+```
+
+Functions to manage the permissions
+
+```kotlin
+
+    private fun requestWritePermission() {
+        if (!permissionAlreadyGranted())
+            requestPermissions(
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                KEY_REQUEST_PERMISSION
+            )
+    }
+
+    private fun permissionAlreadyGranted(): Boolean {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        when(requestCode){
+            KEY_REQUEST_PERMISSION -> if (grantResults.isNotEmpty()) {
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, R.string.message_permission, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
 ```
 
 List of options
@@ -108,6 +168,10 @@ List of options
     this.multiChannelDetection?.useHumansAroundChangedListener = true
     // Map the surrounding Environement and localize into it (true)
     this.multiChannelDetection?.hasToLocalizeAndMap = true
+
+
+    // /!\ Important : Start the library /!\
+    this.multiChannelDetection?.onRobotFocusGained(qiContext)
 ```
 
 ## Application
@@ -166,23 +230,26 @@ Contributors names and contact info
 ## Screens
 
 #### Splash Screen Loading
-![Alt text](/Screens/screen_splash_loading.png?raw=true "Splash Screen Loading")
+![Alt text](/Screens/screen_splash.png?raw=true "Splash Screen Loading")
 ---
 #### Splash Screen Welcome
-![Alt text](/Screens/screen_splash_welcome.png?raw=true "Splash Screen Welcome")
+![Alt text](/Screens/screen_splash_ready.png?raw=true "Splash Screen Welcome")
 ---
-#### Main Screen
-![Alt text](/Screens/screen_main.png?raw=true "Main Screen")
+#### Main Screen FR
+![Alt text](/Screens/screen_main_fr.png?raw=true "Main Screen FR")
 ---
-#### Main Screen Message
-![Alt text](/Screens/screen_main_message.png?raw=true "Main Screen Message")
+#### Main Screen EN
+![Alt text](/Screens/screen_main_en.png?raw=true "Main Screen EN")
 ---
-#### Main Screen Lang
-![Alt text](/Screens/screen_main_lang.png?raw=true "Main Screen Lang")
+#### Screen Message
+![Alt text](/Screens/screen_message.png?raw=true "Screen Message")
 ---
-#### Main Screen  Mask Warning Dialog
-![Alt text](/Screens/screen_main_mask_dialog.png?raw=true "Main Screen Mask Warning Dialog")
+#### Screen onTouch Dialog
+![Alt text](/Screens/screen_no_touch.png?raw=true "Screen onTouch Dialog")
 ---
-#### Splash Screen Charging Flap Dialog
-![Alt text](/Screens/screen_splash_charging_flap.png?raw=true "Splash Screen Charging Flap Dialog")
+#### Screen Mask Warning Dialog
+![Alt text](/Screens/screen_mask.png?raw=true "Screen Mask Warning Dialog")
+---
+#### Screen Charging Flap Dialog
+![Alt text](/Screens/screen_charging_flap.png?raw=true "Screen Charging Flap Dialog")
 ---

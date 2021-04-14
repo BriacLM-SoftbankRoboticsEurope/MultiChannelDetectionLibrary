@@ -2,14 +2,14 @@
 <resources>
     <string name="app_name">Pepper Covid Assistant</string>
 
-    <string name="message_camera_permission">Your permission is required.</string>
+    <string name="message_permission">Your permission is required.</string>
     <string name="warning">Warning</string>
     <string name="skip">\"SKIP\"</string>
     <string name="quote_mark">\"</string>
     <string name="symptoms">List Of Symptoms</string>
     <string name="mask">How To Put On/Take Off Your Mask</string>
     <string name="wash">How To Wash Your Hands</string>
-    <string name="protective">Protective Measure</string>
+    <string name="protective">Protective Measures</string>
     <string name="put_mask_on">Please put a mask on</string>
     <string name="close_charging_flap">Please close the Charging Flap.</string>
     <string name="no_touch">Please don\'t touch the screen to interact.</string>

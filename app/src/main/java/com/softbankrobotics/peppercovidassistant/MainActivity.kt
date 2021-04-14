@@ -6,7 +6,6 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
@@ -28,6 +27,7 @@ import com.aldebaran.qi.sdk.conversationalcontentlibrary.volumecontrol.VolumeCon
 import com.aldebaran.qi.sdk.design.activity.RobotActivity
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayPosition
 import com.aldebaran.qi.sdk.design.activity.conversationstatus.SpeechBarDisplayStrategy
+import com.aldebaran.qi.sdk.util.FutureUtils
 import com.softbankrobotics.multichanneldetectionlibrary.MultiChannelDetection
 import com.softbankrobotics.multichanneldetectionlibrary.MultiChannelDetectionCallbacks
 import com.softbankrobotics.peppercovidassistant.executors.ActionExecutor
@@ -71,7 +71,7 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
     private val executors: MutableMap<String, QiChatExecutor> = HashMap()
 
     /**********************************HumanAwareness********************************************/
-    override var context: RobotActivity = this
+    override var robotActivity: RobotActivity = this
     var multiChannelDetection: MultiChannelDetection? = null
     var textDialog : TextDialog? = null
     var skipMaskDetection = false
@@ -110,7 +110,7 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
 
         initializeLangSelection()
 
-        requestCamAndWritePermission()
+        requestWritePermission()
         QiSDK.register(this, this)
         showFragment(ID_FRAGMENT_SPLASH)
     }
@@ -302,7 +302,7 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
             showFragment(ID_FRAGMENT_SPLASH)
             textDialog = TextDialog()
             textDialog?.isClosable = false
-            textDialog?.setText(context.getString(R.string.close_charging_flap))
+            textDialog?.setText(robotActivity.getString(R.string.close_charging_flap))
             textDialog?.setOnClickListener {
                 this.multiChannelDetection?.cancelMappingAndLocalize()
                 this.multiChannelDetection?.ready()
@@ -310,8 +310,8 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
             }
             if (!textDialog?.isVisible!!)
                 textDialog?.show(
-                    context.fragmentManager,
-                    context.getString(R.string.warning)
+                    robotActivity.fragmentManager,
+                    robotActivity.getString(R.string.warning)
                 )
         } else if (!open && qiContext != null && textDialog != null && textDialog?.isVisible!!)
             textDialog?.dismiss()
@@ -438,7 +438,7 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
 
     /******************************Permissions management****************************************/
 
-    private fun requestCamAndWritePermission() {
+    private fun requestWritePermission() {
         if (!permissionAlreadyGranted())
             requestPermissions(
                 arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
@@ -450,15 +450,11 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
         return ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when(requestCode){
             KEY_REQUEST_PERMISSION -> if (grantResults.isNotEmpty()) {
                 if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, R.string.message_camera_permission, Toast.LENGTH_LONG)
+                    Toast.makeText(this, R.string.message_permission, Toast.LENGTH_LONG)
                         .show()
                 }
             }
@@ -515,10 +511,13 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
 
 
         languageContainer.setOnClickListener { v: View? ->
-            if (config?.locale?.language == "fr")
-                checkForLocal("en")
-            else
-                checkForLocal("fr")
+            FutureUtils.futureOf {
+                if (config?.locale?.language == "fr")
+                    checkForLocal("en")
+                else
+                    checkForLocal("fr")
+
+            }
         }
         updateLangUI()
     }

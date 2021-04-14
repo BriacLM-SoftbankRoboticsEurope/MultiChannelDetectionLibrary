@@ -6,7 +6,7 @@ import com.aldebaran.qi.sdk.design.activity.RobotActivity
 interface MultiChannelDetectionCallbacks {
 
     // context
-    var context: RobotActivity
+    var robotActivity: RobotActivity
 
     // Robot is ready to engage
     fun onRobotReady(isRobotReady: Boolean)
