@@ -22,17 +22,19 @@ Add the dependency on the face detection lib to your app build.gradle in the dep
 
 ```
 dependencies {
-	implementation 'com.github.BriacLM-SoftbankRoboticsEurope:MultiChannelDetectionLibrary:1.6'
+	implementation 'com.github.BriacLM-SoftbankRoboticsEurope:MultiChannelDetectionLibrary:2.1'
 }
 ```
 
 To use this library you first need to implement the interface HumanDetectionCallbacks to your MainActivity with two members variable context and humanDetection
 
 ```kotlin
-class MainActivity : RobotActivity(), MultiChannelDetectionCallbacks {
+class MainActivity : RobotActivity(), RobotLifecycleCallbacks, MultiChannelDetectionCallbacks {
 
     override var robotActivity: RobotActivity = this
     var multiChannelDetection: MultiChannelDetection? = null
+
+    private val KEY_REQUEST_PERMISSION = 102
 
     ---
 }
@@ -45,6 +47,10 @@ override fun onCreate(savedInstanceState: Bundle?) {
     this.multiChannelDetection = MultiChannelDetection(this)
 
     super.onCreate(savedInstanceState)
+
+    requestWritePermission()
+
+    QiSDK.register(this, this)
 }
 ```
 
@@ -64,7 +70,7 @@ override fun onResume() {
 Initialize the options in the onRobotFocusGained function and call this.multiChannelDetection?.onRobotFocusGained(qiContext)
 
 ```kotlin
-override fun onRobotFocusGained(qiContext: QiContext?) {
+override fun onRobotFocusGained(qiContext: QiContext) {
     if (this.multiChannelDetection == null) {
         this.multiChannelDetection = MultiChannelDetection(this)
     }
@@ -90,7 +96,8 @@ Functions to implement on your RobotActivity
      * Robot is Ready to engage : see HumanDetection
      * Ready When robot has done : localize, map and chat
      */
-    override fun onRobotReady(isRobotReady: Boolean)
+    override fun onRobotReady(isRobotReady: Boolean) {
+    }
 
     /**
      * @param step: Index of the step
@@ -141,11 +148,15 @@ Functions to manage the permissions
     }
 ```
 
+Update your manifest
+
+```xml
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+```
+
 List of options
 
 ```kotlin
-    // Directory where store the map (Map and localize)
-    this.multiChannelDetection?.filesDirectoryPath: String? = null
     // Save intial orientation (true)
     this.multiChannelDetection?.saveInitialPosition = true
     // Use the head camera (true) or the tablet camera (false) to use the mask detection

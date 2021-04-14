@@ -73,7 +73,7 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
     // Use the head camera (true) or the tablet camera (false) to use the mask detection
     public var useHeadCamera : Boolean = false
     // Directory where store the map (Map and localize)
-    public var filesDirectoryPath: String? = null
+    private var filesDirectoryPath: String? = null
     // Save intial orientation (true)
     public var saveInitialPosition = true
     // Turn pepper to the initial orientation when he is localized (true)
@@ -379,8 +379,57 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
         activity?.onStepReach(MAPPING, false)
 
         // Create a LocalizeAndMap action.
-        val localizeAndMap = LocalizeAndMapBuilder.with(qiContext).build()
+        LocalizeAndMapBuilder.with(qiContext).buildAsync().andThenConsume {
+            // Add an on status changed listener on the LocalizeAndMap action for the robot to say when he is localized.
+            it.addOnStatusChangedListener {
+            if (it == LocalizationStatus.LOCALIZED) {
+                Log.d(TAG,"localizeAndMap : Robot is Localized")
+                animationToLookAround()?.thenConsume {
+                    Log.i(TAG, "Robot has mapped his environment.")
+                    releaseAbilities()
+                    // Cancel the LocalizeAndMap action.
+                    cancelMappingAndLocalize()
+                }
+            }
+        }
+            val localizeAndMap = it
+            cancelMappingAndLocalize()?.thenConsume {
 
+                holdAbilities()?.thenConsume {
+                    mapAndLocalizeFuture = localizeAndMap.async().run()
+
+                    // Add a lambda to the action execution.
+                    mapAndLocalizeFuture?.thenConsume {
+                        if (it.hasError()) {
+                            Log.d(
+                                TAG,
+                                "Error while mapping and localize : $tryToLocalize / $TRY_TO_LOCALIZE_LIMIT"
+                            )
+                            if (tryToLocalize >= TRY_TO_LOCALIZE_LIMIT) {
+                                ready()
+                            } else {
+                                Log.e(TAG, "LocalizeAndMap action finished with error.", it.error)
+                                restartMapping(false)
+                            }
+                        } else if (it.isCancelled) {
+                            // Dump the ExplorationMap.
+
+                            releaseAbilities()
+                            explorationMap = localizeAndMap.dumpMap()
+                            if (permissionAlreadyGranted())
+                                saveFileHelper!!.writeStreamableBufferToFile(
+                                    filesDirectoryPath,
+                                    mapFileName,
+                                    explorationMap?.serializeAsStreamableBuffer()!!
+                                )
+                            startLocalizing(false)
+                        }
+                    }
+                }
+            }
+        }
+
+        /*
         // Add an on status changed listener on the LocalizeAndMap action for the robot to say when he is localized.
         localizeAndMap?.addOnStatusChangedListener {
             if (it == LocalizationStatus.LOCALIZED) {
@@ -392,8 +441,9 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
                     cancelMappingAndLocalize()
                 }
             }
-        }
+        }*/
         // Execute the LocalizeAndMap action asynchronously.
+        /*
         cancelMappingAndLocalize()?.thenConsume {
 
             holdAbilities()?.thenConsume {
@@ -428,6 +478,7 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
                 }
             }
         }
+         */
     }
 
     /**
@@ -440,8 +491,37 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
 
         val localize = LocalizeBuilder.with(qiContext)
             .withMap(explorationMap)
-            .build()
+        .buildAsync().andThenConsume {
+            it.addOnStatusChangedListener {
+                if (it == LocalizationStatus.LOCALIZED) {
+                    Log.d(TAG, "localize Robot is Localized")
+                    isRobotLocalize = true
+                    if (turnToInitialPosition) {
+                        val turnFuture = turnToInitialPosition()
+                        if (turnFuture != null)
+                            turnFuture.thenConsume { ready() }
+                        else
+                            ready()
+                    }
+                    else
+                        ready()
+                }
+            }
+            // Add a lambda to the action execution.
+            mapAndLocalizeFuture = it.async().run()
+            mapAndLocalizeFuture?.thenConsume {
+                if (it.hasError()) {
+                    Log.e(TAG, "Localize action finished with error.", it.error)
+                    Log.d(TAG, "Error while mapping and localize : $tryToLocalize / $TRY_TO_LOCALIZE_LIMIT")
+                    if (tryToLocalize >= TRY_TO_LOCALIZE_LIMIT)
+                        ready()
+                    else if (!isChargingFlapOpen())
+                        restartMapping(localizeFromExistingMap)
+                }
+            }
+        }
 
+        /*
         localize?.addOnStatusChangedListener {
             if (it == LocalizationStatus.LOCALIZED) {
                 Log.d(TAG, "localize Robot is Localized")
@@ -457,21 +537,11 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
                     ready()
             }
         }
+         */
 
         Log.i(TAG, "Localizing...")
 
-        // Add a lambda to the action execution.
-        mapAndLocalizeFuture = localize?.async()?.run()
-        mapAndLocalizeFuture?.thenConsume {
-            if (it.hasError()) {
-                Log.e(TAG, "Localize action finished with error.", it.error)
-                Log.d(TAG, "Error while mapping and localize : $tryToLocalize / $TRY_TO_LOCALIZE_LIMIT")
-                if (tryToLocalize >= TRY_TO_LOCALIZE_LIMIT)
-                    ready()
-                else if (!isChargingFlapOpen())
-                    restartMapping(localizeFromExistingMap)
-            }
-        }
+
     }
 
     /**
