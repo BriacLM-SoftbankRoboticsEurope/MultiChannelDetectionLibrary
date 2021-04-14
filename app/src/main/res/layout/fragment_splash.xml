@@ -2,49 +2,42 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include
-        android:gravity="center"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:id="@+id/main_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        layout="@layout/template_welcome"/>
     <FrameLayout
-        android:id="@+id/splash_touch_unlock"
+        android:background="@drawable/box"
+        android:layout_marginTop="100dp"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:background="@color/theme"
-        android:layout_marginBottom="30dp"
-        android:padding="10dp"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/splash_touch_unlock_text"
-            android:text="@string/title_welcome"
-            android:textColor="@color/white"
-            style="@style/TextAppearance.AppCompat.Large"
+        <LinearLayout
+            android:layout_margin="10dp"
+            android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="@string/title_information"
+                android:textColor="@color/theme"
+                android:layout_gravity="center"
+                android:textSize="40sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:text="COVID-19"
+                android:textStyle="bold"
+                android:textColor="@color/theme"
+                android:textSize="60sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
     </FrameLayout>
     <LinearLayout
         android:id="@+id/loading_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <ProgressBar
-            android:id="@+id/loading_loader"
-            style="@android:style/Widget.ProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content"
-            android:indeterminate="true" />
         <TextView
-            android:layout_marginTop="10dp"
             android:textSize="35sp"
             android:textStyle="italic"
             android:id="@+id/loading_message"
@@ -53,5 +46,16 @@
             style="@style/TextAppearance.AppCompat.Large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+        <ProgressBar
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/loading_loader"
+            style="@android:style/Widget.ProgressBar"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/progress_circle"
+            android:layout_width="80dp"
+            android:layout_gravity="center"
+            android:layout_height="80dp" />
     </LinearLayout>
 </RelativeLayout>

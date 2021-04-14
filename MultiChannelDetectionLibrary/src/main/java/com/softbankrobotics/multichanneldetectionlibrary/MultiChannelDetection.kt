@@ -49,8 +49,7 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
     // Store the map.
     private var explorationMap: ExplorationMap? = null
     // Store the LocalizeAndMap execution.
-    private var mappingFuture: Future<Void>? = null
-    private var localizeFuture: Future<Void>? = null
+    private var mapAndLocalizeFuture: Future<Void>? = null
     private var turnToInitialPositionFuture: Future<Void?>? = null
     private var faceMaskDetectionFuture: Future<Unit>? = null
     // Save Map
@@ -71,29 +70,29 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
     private var humanEngaged : Boolean = false // Is pepper engaged with someone used to change the sensitivity of the mask detection
 
     //-------------------- OPTION-------------------
-    // Use Top/Head camera or Bottom/Tablet Camera
+    // Use the head camera (true) or the tablet camera (false) to use the mask detection
     var useHeadCamera : Boolean = false
-    // Directory where store the map
+    // Directory where store the map (Map and localize)
     var filesDirectoryPath: String? = null
-    // Save intial orientation
+    // Save intial orientation (true)
     var saveInitialPosition = true
-    // HOLD BASE
-    var holdBase : Boolean = false
-    // TURN TO INTIAL POSITION
+    // Turn pepper to the initial orientation when he is localized (true)
     var turnToInitialPosition = true
-    // Use ChargingFlapDetection
+    // Hold pepper base when he is not engaged with a user (true) or free the base (false)
+    var holdBase : Boolean = false
+    // Charging flap state change detection event (true)
     var useChargingFlapDetection = true
-    // Use Human Detection / Human Awarness
+    // Use the HumanAwarness from the QiSDK (true)
     var useHumanDetection = true
-    // Use FaceMask Detection
+    // Use the FaceMask Detection from the library (true)
     var useFaceMaskDetection = true
-    // Use HumanAround
+    // Use the onEngagedHumanChangedListener from HumanAwarness (true)
     var useEngagedHumanChangedListener = true
-    // Use HumanAround
+    // Use the onRecommendedHumanToEngageChangedListener from HumanAwarness (true)
     var useRecommendedHumanToEngageChangedListener = true
-    // Use HumanAround
+    // Use the onHumansAroundChangedListener from HumanAwarness (true)
     var useHumansAroundChangedListener = false
-    // Launch Localize and Map
+    // Map the surrounding environment and localize into it (true)
     var hasToLocalizeAndMap = true
 
     // Hold Abilities
@@ -159,6 +158,8 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
                     sortedFaces.forEach {
                         sortedFacesFilter.add(FaceDetected(it.hasMask, it.picture, it.confidence))
                     }
+                    if (holder != null)
+                        holder?.async()?.release()
                     activity?.onHumanDetected(null, sortedFacesFilter)
                 }
 
@@ -299,29 +300,29 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
      */
     private fun restartMapping(localizeFromExistingMap : Boolean) {
         Log.d(TAG, "Restart Mapping")
+
         if (!hasToLocalizeAndMap) {
             ready()
             return
         }
-        cancelMappingAndLocalize()
-        if (localizeFromExistingMap && tryToLocalizeOnExistingMap < TRY_TO_LOCALIZE_EXISTING_MAP_LIMIT)
-            startMapAndLocalizeWithExistingMap()
-        else
-            startMapping()
+
+        cancelMappingAndLocalize()?.thenConsume {
+            if (localizeFromExistingMap && tryToLocalizeOnExistingMap < TRY_TO_LOCALIZE_EXISTING_MAP_LIMIT)
+                startMapAndLocalizeWithExistingMap()
+            else
+                startMapping()
+        }
     }
 
     /**
      * Stop and cancel the mapping and localization of pepper
      */
-    fun cancelMappingAndLocalize() {
-        if (mappingFuture != null) {
-            mappingFuture?.requestCancellation()
-            Log.d(TAG, "mappingFuture is not Null : requestCancellation")
-        }
-        if (localizeFuture != null) {
-            localizeFuture?.requestCancellation()
-            Log.d(TAG, "localizeFuture is not Null : requestCancellation")
-        }
+    fun cancelMappingAndLocalize() : Future<Void>? {
+        if (mapAndLocalizeFuture == null)
+            return Future.of(null)
+        mapAndLocalizeFuture?.requestCancellation()
+        Log.d(TAG, "mapAndLocalizeFuture is not Null : requestCancellation")
+        return mapAndLocalizeFuture
     }
 
     /**
@@ -357,9 +358,9 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
             Log.d(TAG, "loadMap")
             Future.of(ExplorationMapBuilder.with(qiContext).withStreamableBuffer(mapData).buildAsync()).andThenConsume {
                 explorationMap = it.value
-                if (mappingFuture != null)
-                    mappingFuture?.requestCancellation()
-                startLocalizing(true)
+                cancelMappingAndLocalize()?.thenConsume {
+                    startLocalizing(true)
+                }
             }
             return
         }
@@ -386,7 +387,37 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
                 Log.d(TAG,"localizeAndMap : Robot is Localized")
                 holdAbilities()?.thenConsume {
                     animationToLookAround()?.thenConsume {
+                        Log.i(TAG, "Robot has mapped his environment.")
+                        releaseAbilities()
+                        // Cancel the LocalizeAndMap action.
+                        cancelMappingAndLocalize()
+                    }
+                }
+            }
+        }
+        // Execute the LocalizeAndMap action asynchronously.
+        cancelMappingAndLocalize()?.thenConsume {
+
+            holdAbilities()?.thenConsume {
+                mapAndLocalizeFuture = localizeAndMap?.async()?.run()
+
+                // Add a lambda to the action execution.
+                mapAndLocalizeFuture?.thenConsume {
+                    if (it.hasError()) {
+                        Log.d(
+                            TAG,
+                            "Error while mapping and localize : $tryToLocalize / $TRY_TO_LOCALIZE_LIMIT"
+                        )
+                        if (tryToLocalize >= TRY_TO_LOCALIZE_LIMIT) {
+                            ready()
+                        } else {
+                            Log.e(TAG, "LocalizeAndMap action finished with error.", it.error)
+                            restartMapping(false)
+                        }
+                    } else if (it.isCancelled) {
                         // Dump the ExplorationMap.
+
+                        releaseAbilities()
                         explorationMap = localizeAndMap.dumpMap()
                         if (permissionAlreadyGranted())
                             saveFileHelper!!.writeStreamableBufferToFile(
@@ -394,32 +425,9 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
                                 mapFileName,
                                 explorationMap?.serializeAsStreamableBuffer()!!
                             )
-                        Log.i(TAG, "Robot has mapped his environment.")
-                        // Cancel the LocalizeAndMap action.
-                        cancelMappingAndLocalize()
-                        releaseAbilities()
                         startLocalizing(false)
                     }
                 }
-            }
-        }
-        // Execute the LocalizeAndMap action asynchronously.
-        cancelMappingAndLocalize()
-
-        mappingFuture = localizeAndMap?.async()?.run()
-
-        // Add a lambda to the action execution.
-        mappingFuture?.thenConsume {
-            if (it.hasError()) {
-                Log.d(TAG, "Error while mapping and localize : $tryToLocalize / $TRY_TO_LOCALIZE_LIMIT")
-                if (tryToLocalize >= TRY_TO_LOCALIZE_LIMIT) {
-                    ready()
-                } else {
-                    Log.e(TAG, "LocalizeAndMap action finished with error.", it.error)
-                    restartMapping(false)
-                }
-            } else if (it.isCancelled) {
-                startLocalizing(false)
             }
         }
     }
@@ -455,7 +463,8 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
         Log.i(TAG, "Localizing...")
 
         // Add a lambda to the action execution.
-        localizeFuture?.thenConsume {
+        mapAndLocalizeFuture = localize?.async()?.run()
+        mapAndLocalizeFuture?.thenConsume {
             if (it.hasError()) {
                 Log.e(TAG, "Localize action finished with error.", it.error)
                 Log.d(TAG, "Error while mapping and localize : $tryToLocalize / $TRY_TO_LOCALIZE_LIMIT")
@@ -465,7 +474,6 @@ class MultiChannelDetection(activity: MultiChannelDetectionCallbacks) {
                     restartMapping(localizeFromExistingMap)
             }
         }
-        localizeFuture = localize?.async()?.run()
     }
 
     /**

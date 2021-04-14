@@ -5,12 +5,14 @@
     <string name="message_camera_permission">Votre permission est nécessaire.</string>
     <string name="warning">Attention</string>
     <string name="skip">\"Ignorer\"</string>
-    <string name="symptoms">\"Liste Des Symptomes\"</string>
-    <string name="mask">\"Comment Mettre/Enlever Son Masque\"</string>
-    <string name="wash">\"Comment Se Laver Les Mains\"</string>
-    <string name="protective">\"Gestes Barrières\"</string>
+    <string name="quote_mark">\"</string>
+    <string name="symptoms">Liste Des Symptomes</string>
+    <string name="mask">Comment Mettre/Enlever Son Masque</string>
+    <string name="wash">Comment Se Laver Les Mains</string>
+    <string name="protective">Gestes Barrières</string>
     <string name="put_mask_on">Veuillez mettre un masque s\'il vous plaît</string>
     <string name="close_charging_flap">Veuillez fermer ma trappe de recharge s\'il vous plaît</string>
+    <string name="no_touch">Veuillez ne pas touchez l\'écran s\'il vous plaît</string>
     <string name="title_information">Information</string>
     <string name="title_coronavirus_covid_19">
         CORONAVIRUS

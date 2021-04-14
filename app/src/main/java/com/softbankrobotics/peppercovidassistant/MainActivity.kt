@@ -7,7 +7,7 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.aldebaran.qi.Future
@@ -34,8 +34,9 @@ import com.softbankrobotics.peppercovidassistant.executors.CovidExecutor
 import com.softbankrobotics.peppercovidassistant.executors.LanguageExecutor
 import com.softbankrobotics.peppercovidassistant.fragments.BaseRobotFragment
 import com.softbankrobotics.peppercovidassistant.fragments.MainFragment
+import com.softbankrobotics.peppercovidassistant.fragments.MessageFragment
 import com.softbankrobotics.peppercovidassistant.fragments.SplashFragment
-import com.softbankrobotics.peppercovidassistant.fragments.dialog.InformationDialog
+import com.softbankrobotics.peppercovidassistant.fragments.dialog.TextDialog
 import com.softbankrobotics.peppercovidassistant.utils.ChatData
 import com.softbankrobotics.peppercovidassistant.utils.CountDownNoInteraction
 import java.util.*
@@ -52,6 +53,7 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
         private const val TAG = "MSI_MAIN_ACTIVITY"
         const val ID_FRAGMENT_SPLASH = 1
         const val ID_FRAGMENT_MAIN = 2
+        const val ID_FRAGMENT_MESSAGE = 3
         private const val KEY_REQUEST_PERMISSION=102
     }
 
@@ -70,7 +72,8 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
     /**********************************HumanAwareness********************************************/
     override var context: RobotActivity = this
     var multiChannelDetection: MultiChannelDetection? = null
-    var informationDialog : InformationDialog? = null
+    var textDialog : TextDialog? = null
+    var skipMaskDetection = false
 
     /**********************************Countdown*************************************************/
     private val countDownNoInteraction = CountDownNoInteraction(this, 120000, 10000) //10000, 1000
@@ -104,7 +107,7 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
 
         setContentView(R.layout.activity_main)
 
-        lang()
+        initializeLangSelection()
 
         requestCamAndWritePermission()
         QiSDK.register(this, this)
@@ -150,21 +153,37 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
         this.currentChatData?.goToBookmark(bookmark, topic)
     }
 
+
+    fun goToBookmarkAsync(bookmark: String, topic: String) {
+        this.currentChatData?.goToBookmarkAsync(bookmark, topic)
+    }
+
     override fun onBookmarkReached(bookmark: Bookmark?) {}
 
     /**
      * Shows a fragment
      * @param fragmentId : the id of the fragment to display
      */
-    fun showFragment(fragmentId:Int) {
+    fun showFragment(fragmentId: Int, vararg args: String) {
         when(fragmentId){
             ID_FRAGMENT_SPLASH -> this.fragment = SplashFragment()
-            ID_FRAGMENT_MAIN -> this.fragment = MainFragment()
+            ID_FRAGMENT_MAIN -> {
+                this.fragment = MainFragment()
+                if (this.currentFragmentId == ID_FRAGMENT_SPLASH)
+                    (this.fragment as MainFragment).sayHello = true
+            }
+            ID_FRAGMENT_MESSAGE -> {
+                this.fragment = MessageFragment()
+                (this.fragment as MessageFragment).MESSAGE_ID = args.get(0).toInt()
+            }
             else -> this.fragment = SplashFragment()
         }
         this.fragment?.let { currentFragment ->
             this.currentFragmentId = fragmentId
-            supportFragmentManager.beginTransaction().replace(R.id.activity_main_fragment, currentFragment).commitAllowingStateLoss()
+            supportFragmentManager.beginTransaction().replace(
+                R.id.activity_main_fragment,
+                currentFragment
+            ).commitAllowingStateLoss()
         }
     }
 
@@ -285,17 +304,21 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
     override fun onChargingFlapStateChanged(open: Boolean) {
         if (open && qiContext != null) {
             showFragment(ID_FRAGMENT_SPLASH)
-            informationDialog = InformationDialog()
-            informationDialog?.setText(context.getString(R.string.close_charging_flap))
-            informationDialog?.setOnClickListener {
+            textDialog = TextDialog()
+            textDialog?.isClosable = false
+            textDialog?.setText(context.getString(R.string.close_charging_flap))
+            textDialog?.setOnClickListener {
                 this.multiChannelDetection?.cancelMappingAndLocalize()
                 this.multiChannelDetection?.ready()
-                informationDialog?.dismiss()
+                textDialog?.dismiss()
             }
-            if (!informationDialog?.isVisible!!)
-                informationDialog?.show(context.fragmentManager, context.getString(R.string.warning))
-        } else if (!open && qiContext != null && informationDialog != null && informationDialog?.isVisible!!)
-            informationDialog?.dismiss()
+            if (!textDialog?.isVisible!!)
+                textDialog?.show(
+                    context.fragmentManager,
+                    context.getString(R.string.warning)
+                )
+        } else if (!open && qiContext != null && textDialog != null && textDialog?.isVisible!!)
+            textDialog?.dismiss()
     }
 
     /**
@@ -308,8 +331,8 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
         if (faces != null){
             if (faces.isNotEmpty())
                 awake()
-            if (currentFragmentId == ID_FRAGMENT_MAIN)
-                runOnUiThread { (fragment as MainFragment).maskDetector(faces) }
+            if (currentFragmentId != ID_FRAGMENT_SPLASH)
+                runOnUiThread { fragment?.maskDetector(faces) }
         }
     }
 
@@ -322,15 +345,20 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
             Log.d(TAG, "Build chat")
             onStepReach(2, false)
 
-            val topicsNamesFR = listOf("topic_small_talk", "concepts", "topic_covid")
-            val topicsNames = listOf("concepts", "topic_covid")
+            var topicsNamesFR : List<String>? = null
+            var topicsNames : List<String>? = null
+
+            if (ChatData.isLanguageAvailable(qiContext!!, Locale("fr")))
+                topicsNamesFR = listOf("topic_small_talk", "concepts", "topic_covid")
+            if (ChatData.isLanguageAvailable(qiContext!!, Locale("en")))
+                topicsNames = listOf("concepts", "topic_covid")
 
             val conversationalContents = listOf(
-                    GreetingsConversationalContent(),
-                    AskRobotNameConversationalContent(),
-                    RobotAbilitiesConversationalContent(),
-                    RepeatConversationalContent(),
-                    VolumeControlConversationalContent()
+                GreetingsConversationalContent(),
+                AskRobotNameConversationalContent(),
+                RobotAbilitiesConversationalContent(),
+                RepeatConversationalContent(),
+                VolumeControlConversationalContent()
             )
 
             if (qiContext != null) {
@@ -339,17 +367,36 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
                 executors["CovidExecutor"] = CovidExecutor(qiContext!!, this)
             }
 
-            this.chatDataList["en"] = ChatData(this, this.qiContext!!, Locale.ENGLISH, topicsNames, conversationalContents, true)
-            this.chatDataList["fr"] = ChatData(this, this.qiContext!!, Locale.FRENCH, topicsNamesFR, conversationalContents, true)
+            if (topicsNames != null)
+                this.chatDataList["en"] = ChatData(
+                    this,
+                    this.qiContext!!,
+                    Locale.ENGLISH,
+                    topicsNames,
+                    conversationalContents,
+                    true
+                )
+            if (topicsNamesFR != null)
+                this.chatDataList["fr"] = ChatData(
+                    this,
+                    this.qiContext!!,
+                    Locale.FRENCH,
+                    topicsNamesFR,
+                    conversationalContents,
+                    true
+                )
             itemBuilt = true
         } else {
             if (qiContext != null) {
-                this.chatDataList["en"]?.setupChat(qiContext!!)
-                this.chatDataList["fr"]?.setupChat(qiContext!!)
+                if (ChatData.isLanguageAvailable(qiContext!!, Locale("en")))
+                    this.chatDataList["en"]?.setupChat(qiContext!!)
+                if (ChatData.isLanguageAvailable(qiContext!!, Locale("fr")))
+                    this.chatDataList["fr"]?.setupChat(qiContext!!)
             }
         }
         defineCurrentLocale()
         selectChatData()
+        langSelection()
 
         this.runningChat = this.currentChatData?.runChat()
         onStepReach(2, true)
@@ -359,7 +406,10 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
      * Defines the current locale to set
      */
     private fun defineCurrentLocale(){
-        if (this.qiContext != null && !ChatData.isLanguageAvailable(this.qiContext!!, config?.locale!!)) {
+        if (this.qiContext != null && !ChatData.isLanguageAvailable(
+                this.qiContext!!,
+                config?.locale!!
+            )) {
             resources.configuration.setLocale(Locale.ENGLISH)
             resources.updateConfiguration(resources.configuration, resources.displayMetrics)
         }
@@ -394,18 +444,26 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
 
     private fun requestCamAndWritePermission() {
         if (!permissionAlreadyGranted())
-            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), KEY_REQUEST_PERMISSION)
+            requestPermissions(
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                KEY_REQUEST_PERMISSION
+            )
     }
 
     private fun permissionAlreadyGranted(): Boolean {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         when(requestCode){
             KEY_REQUEST_PERMISSION -> if (grantResults.isNotEmpty()) {
                 if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, R.string.message_camera_permission, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, R.string.message_camera_permission, Toast.LENGTH_LONG)
+                        .show()
                 }
             }
         }
@@ -434,7 +492,7 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
             }
         } else
             this.runningChat = this.currentChatData?.runChat()
-        lang()
+        langSelection()
     }
 
     /**
@@ -450,40 +508,41 @@ class MainActivity : RobotActivity(), RobotLifecycleCallbacks, Chat.OnStartedLis
     /**
      * Initialize the interaction to update lang
      */
-    private fun lang() {
-        val languageContainer = findViewById<View>(R.id.view_lang_container)
-        languageContainer.visibility = View.INVISIBLE
-        languageContainer.isClickable = false
-
-        val buttonLanguage = findViewById<ImageButton>(R.id.button_language)
-        val buttonLang1 = findViewById<ImageButton>(R.id.button_lang_1)
-        val buttonLang2 = findViewById<ImageButton>(R.id.button_lang_2)
-
-        buttonLanguage.setOnClickListener { v: View? ->
-            if (languageContainer.isClickable) {
-                languageContainer.visibility = View.INVISIBLE
-                languageContainer.isClickable = false
-            } else {
-                languageContainer.visibility = View.VISIBLE
-                languageContainer.isClickable = true
-            }
-        }
-        buttonLang1.setOnClickListener { v: View? ->
-            if (itemBuilt)
-                setLocale("fr")
-        }
-        buttonLang2.setOnClickListener { v: View? ->
-            if (itemBuilt)
-                setLocale("en")
-        }
-        chosenLang()
+    private fun initializeLangSelection() {
+        langSelection()
+        findViewById<View>(R.id.lang_container).isClickable = false
     }
 
-    private fun chosenLang() {
-        val languageContainer = findViewById<View>(R.id.view_lang_container)
+    private fun langSelection() {
+        val languageContainer = findViewById<View>(R.id.lang_container)
+        languageContainer.isClickable = true
 
-        findViewById<ImageButton>(R.id.button_language).setImageResource(if (config?.locale?.language == "fr") R.drawable.lang_fr else R.drawable.lang_uk)
-        languageContainer.visibility = View.INVISIBLE
-        languageContainer.isClickable = false
+
+        languageContainer.setOnClickListener { v: View? ->
+            if (config?.locale?.language == "fr") {
+                if (itemBuilt)
+                    setLocale("en")
+            } else {
+                if (itemBuilt)
+                    setLocale("fr")
+            }
+            updateLangUI()
+        }
+        updateLangUI()
+    }
+
+    private fun updateLangUI() {
+        runOnUiThread {
+            val buttonLang1 = findViewById<ImageView>(R.id.button_lang_1)
+            val buttonLang2 = findViewById<ImageView>(R.id.button_lang_2)
+
+            if (config?.locale?.language == "fr") {
+                buttonLang2.setImageDrawable(res?.getDrawable(R.drawable.ic_flagfr))
+                buttonLang1.setImageDrawable(res?.getDrawable(R.drawable.ic_flaguk))
+            } else {
+                buttonLang1.setImageDrawable(res?.getDrawable(R.drawable.ic_flagfr))
+                buttonLang2.setImageDrawable(res?.getDrawable(R.drawable.ic_flaguk))
+            }
+        }
     }
 }

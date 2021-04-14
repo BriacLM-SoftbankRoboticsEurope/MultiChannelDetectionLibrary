@@ -1,7 +1,7 @@
 topic: ~topic_covid()
 
 proposal:%COVID_1
-Wash your hand regularly\pau=1000\ ^execute(CovidExecutor, COVID_1) Cough or sneeze in your elbow or in a tissue ^execute(CovidExecutor, COVID_2) Use a disposable tissue and then throw it in a trash bin ^execute(CovidExecutor, COVID_3) Avoid handshake and hug\pau=1000\ ^execute(CovidExecutor, COVID_4)
+Wash your hand regularly\pau=1000\ ^execute(CovidExecutor, COVID_1) Wear a mask ^execute(CovidExecutor, COVID_2) Cough or sneeze in your elbow or in a tissue ^execute(CovidExecutor, COVID_3) Use a disposable tissue and then throw it in a trash bin ^execute(CovidExecutor, COVID_4) Avoid handshake and hug\pau=1000\ ^execute(CovidExecutor, COVID_5)
 
 proposal:%WASH_1
 Use soap\pau=1000\ ^execute(CovidExecutor, WASH_1) Palm to palm\pau=1000\ ^execute(CovidExecutor, WASH_2) Right palm over left dorsum with interlaced fingers and vice versa ^execute(CovidExecutor, WASH_3) Palm to palm with fingers interlaced\pau=1000\ ^execute(CovidExecutor, WASH_4) Back of fingers to opposing palms with fingers interlocked ^execute(CovidExecutor, WASH_5) Rotational rubbing of left thumb clasped in right palm and vice versa ^execute(CovidExecutor, WASH_6) Rotational rubbing, backward and forward with clasped fingers of right hand in left palm and vice versa ^execute(CovidExecutor, WASH_7) Dry your hands\pau=1000\ ^execute(CovidExecutor, WASH_8)
@@ -17,23 +17,26 @@ Would you like to see a different message ?
         u1:(~yes) Ok, Please choose a topic!
         u1:(~no) OK, no problem.
 
+proposal:%HELLO
+    Hello
+
 proposal:%HELLO_1
-Hello, would you like to know more about how to protect yourself and other from the coronavirus ?
+Would you like to know more about how to protect yourself and other from the coronavirus ?
         u1:(~yes) ~confirmation ^execute(ActionExecutor, protective_measure)
         u1:(~no) OK, no problem.
 
 proposal:%HELLO_2
-Hello, would you like to know how to wash your hands ?
+Would you like to know how to wash your hands ?
         u1:(~yes) ~confirmation ^execute(ActionExecutor, wash_hands)
         u1:(~no) OK, no problem.
 
 proposal:%HELLO_3
-Hello, would you like to know how to put and take off your mask ?
+Would you like to know how to put and take off your mask ?
         u1:(~yes) ~confirmation ^execute(ActionExecutor, mask)
         u1:(~no) OK, no problem.
 
 proposal:%HELLO_4
-Hello, would you like to know the list of symptoms ?
+Would you like to know the list of symptoms ?
         u1:(~yes) ~confirmation ^execute(ActionExecutor, symptoms)
         u1:(~no) OK, no problem.
 

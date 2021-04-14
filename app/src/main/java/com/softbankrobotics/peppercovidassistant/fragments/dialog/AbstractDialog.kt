@@ -2,6 +2,7 @@ package com.softbankrobotics.peppercovidassistant.fragments.dialog
 
 import android.app.DialogFragment
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +14,10 @@ import com.softbankrobotics.peppercovidassistant.R
 
 abstract class AbstractDialog : DialogFragment() {
 
-    private var title: TextView? = null // Dialog Title View
     private var content: FrameLayout? = null // Dialog Content View
-    private var titleText = "" // Dialog Title text
+    private var dialogView: View? = null // Dialog Content View
+    var isClosable : Boolean = true
+    var skipDialog : Boolean = true
 
     /**
      * Set the dialog style
@@ -48,13 +50,23 @@ abstract class AbstractDialog : DialogFragment() {
      * Initialize the dialog
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v = inflater.inflate(R.layout.dialog_fragment, container, false)
-        content = v.findViewById(R.id.content)
-        title = v.findViewById(R.id.title)
-        val close = v.findViewById(R.id.close) as ImageView
-        title!!.text = if (titleText.isEmpty()) tag else titleText
-        close.setOnClickListener(defaultClickListener())
-        return v
+        dialogView = inflater.inflate(R.layout.dialog_fragment, container, false)
+        content = dialogView?.findViewById(R.id.content)
+        if (isClosable)
+            dialogView?.findViewById<ImageView>(R.id.close)?.setOnClickListener(defaultClickListener())
+        else
+            dialogView?.findViewById<ImageView>(R.id.close)?.visibility = View.GONE
+        return dialogView
+    }
+
+    fun setSkip(skip: Boolean, clickListener: View.OnClickListener?) {
+        val skipText = dialogView?.findViewById<TextView>(R.id.skip)
+        if (skip) {
+            skipText?.visibility = View.VISIBLE
+            skipText?.setOnClickListener(clickListener)
+        } else {
+            skipText?.visibility = View.GONE
+        }
     }
 
     /**

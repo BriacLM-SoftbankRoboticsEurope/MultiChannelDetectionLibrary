@@ -1,7 +1,7 @@
 topic: ~topic_covid()
 
 proposal:%COVID_1
-Lavez-vous très régulièrement les mains ^execute(CovidExecutor, COVID_1) Toussez ou éternuez dans votre coude ou dans un mouchoir ^execute(CovidExecutor, COVID_2) Utilisez un mouchoir à usage unique et jetez-le ^execute(CovidExecutor, COVID_3) Saluez sans se serrer la main, évitez les embrassades ^execute(CovidExecutor, COVID_4)
+Lavez-vous très régulièrement les mains ^execute(CovidExecutor, COVID_1) Porter un masque ^execute(CovidExecutor, COVID_2) Toussez ou éternuez dans votre coude ou dans un mouchoir ^execute(CovidExecutor, COVID_3) Utilisez un mouchoir à usage unique et jetez-le ^execute(CovidExecutor, COVID_4) Saluez sans se serrer la main, évitez les embrassades ^execute(CovidExecutor, COVID_5)
 
 proposal:%WASH_1
 Se laver les mains pendant 30 secondes à l'eau et au savon\pau=1000\ ^execute(CovidExecutor, WASH_1) Frottez-vous les mains, paume contre paume\pau=1000\ ^execute(CovidExecutor, WASH_2) Lavez le dos des mains\pau=1000\ ^execute(CovidExecutor, WASH_3) Puis lavez entre les doigts \pau=1000\ ^execute(CovidExecutor, WASH_4) Lavez au niveau des articulations\pau=1000\ ^execute(CovidExecutor, WASH_5) Lavez aussi à la base des pouces\pau=1000\ ^execute(CovidExecutor, WASH_6) Lavez le bout des doigts et des ongles\pau=1000\ ^execute(CovidExecutor, WASH_7) Enfin séchez-vous les mains avec une serviette propre ou à l'air libre\pau=1000\ ^execute(CovidExecutor, WASH_8)
@@ -17,23 +17,26 @@ Voulez-vous voir un autre message ?
     u1:(~oui) Bien sûr, Choisissez un sujet!
     u1:(~non) Ok, pas de soucis!
 
+proposal:%HELLO
+    Bonjour
+
 proposal:%HELLO_1
-Bonjour voulez-vous en savoir plusse concernant les moyens de protection face au coronavirusse ?
+Voulez-vous en savoir plusse concernant les moyens de protection face au coronavirusse ?
     u1:(~oui) ~confirmation ^execute(ActionExecutor, protective_measure)
     u1:(~non) Ok, pas de soucis!
 
 proposal:%HELLO_2
-Bonjour voulez-vous en savoir plusse concernant la manière de mettre et d'enlever son masque ?
+Voulez-vous en savoir plusse concernant la manière de mettre et d'enlever son masque ?
     u1:(~oui) ~confirmation ^execute(ActionExecutor, mask)
     u1:(~non) Ok, pas de soucis!
 
 proposal:%HELLO_3
-Bonjour voulez-vous en savoir plusse concernant la façon de se laver les mains ?
+Voulez-vous en savoir plusse concernant la façon de se laver les mains ?
     u1:(~oui) ~confirmation ^execute(ActionExecutor, wash_hands)
     u1:(~non) Ok, pas de soucis!
 
 proposal:%HELLO_4
-Bonjour voulez-vous en connaître les différents symtômes du coronavirusse ?
+Voulez-vous en connaître les différents symtômes du coronavirusse ?
     u1:(~oui) ~confirmation ^execute(ActionExecutor, symptoms)
     u1:(~non) Ok, pas de soucis!
 

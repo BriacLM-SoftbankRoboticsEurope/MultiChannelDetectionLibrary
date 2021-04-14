@@ -7,6 +7,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.softbankrobotics.peppercovidassistant.MainActivity
 import com.softbankrobotics.peppercovidassistant.R
+import com.softbankrobotics.peppercovidassistant.fragments.dialog.ImageDialog
 
 class SplashFragment : BaseRobotFragment() {
 
@@ -20,9 +21,13 @@ class SplashFragment : BaseRobotFragment() {
 
         mainActivity.currentChatData?.enableListeningAnimation(false)
 
-        layout.findViewById<View>(R.id.main_view).setOnClickListener {
-            if (mainActivity.multiChannelDetection != null && mainActivity.multiChannelDetection?.isRobotReady!! && mainActivity.chatIsReady)
-                mainActivity.showFragment(MainActivity.ID_FRAGMENT_MAIN)
+        layout.setOnClickListener {
+            showNoTouchDialog(false)
+            noTouchDialog?.handler?.postDelayed({
+                noTouchDialog?.dismiss()
+                if (mainActivity.multiChannelDetection != null && mainActivity.multiChannelDetection?.isRobotReady!! && mainActivity.chatIsReady)
+                    mainActivity.showFragment(MainActivity.ID_FRAGMENT_MAIN)
+            }, ImageDialog.TIME)
         }
         setReady(if (mainActivity.multiChannelDetection == null) false else mainActivity.multiChannelDetection?.isRobotReady!! && mainActivity.chatIsReady)
         if (mainActivity.multiChannelDetection != null && mainActivity.multiChannelDetection?.isRobotReady!!)
@@ -35,14 +40,11 @@ class SplashFragment : BaseRobotFragment() {
      */
     fun setReady(isReady: Boolean) {
         val content = layout.findViewById<LinearLayout>(R.id.loading_content)
-        val unlock = layout.findViewById<FrameLayout>(R.id.splash_touch_unlock)
 
         if (isReady) {
             content.visibility = View.GONE
-            unlock.visibility = View.VISIBLE
         } else {
             content.visibility = View.VISIBLE
-            unlock.visibility = View.GONE
         }
     }
 

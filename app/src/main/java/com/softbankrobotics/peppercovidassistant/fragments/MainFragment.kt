@@ -1,96 +1,92 @@
 package com.softbankrobotics.peppercovidassistant.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.*
-import androidx.appcompat.widget.AppCompatButton
-import com.softbankrobotics.peppercovidassistant.fragments.dialog.MaskDialog
+import android.widget.FrameLayout
+import android.widget.ImageView
+import com.aldebaran.qi.sdk.util.FutureUtils
+import com.softbankrobotics.peppercovidassistant.MainActivity
 import com.softbankrobotics.peppercovidassistant.R
-import com.softbankrobotics.multichanneldetectionlibrary.MultiChannelDetection
-import com.softbankrobotics.peppercovidassistant.models.*
+import com.softbankrobotics.peppercovidassistant.fragments.dialog.ImageDialog
 
 class MainFragment : BaseRobotFragment() {
 
     companion object {
         private const val TAG = "MSI_MAIN_FRAGMENT"
-        private const val PREFIX_MEASURE = "COVID_"
-        private const val PREFIX_WASH = "WASH_"
-        private const val PREFIX_MASK = "MASK_"
-        private const val PREFIX_SYMPTOM = "SYMPTOM_"
     }
 
-    private var message: Pair<String, Int>? = null
+    var sayHello = false
 
-    /**********************************Loop handling*********************************************/
-    private var currentMessageIndex = 0
-
-    /**********************************CovidInfo*************************************************/
-    private var messageData = messageDataFrenchProtectiveMeasures
-    private lateinit var messagePlayers : List<Pair<String, Int>>
-    private var prefix = PREFIX_MEASURE
-
-    /**********************************InfoDialog*************************************************/
-    var noMaskDialog : MaskDialog? = null
-    var skipMask = false
-
+    private var animIsLaunch = false
+    private var stopAnim = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         mainActivity.currentChatData?.enableListeningAnimation(true)
 
-        view.findViewById<AppCompatButton>(R.id.protective_measure).setOnClickListener {
-            protectiveMeasureMessage()
+        view.findViewById<FrameLayout>(R.id.protective_measure).setOnClickListener {
+            showNoTouchDialog(false)
+            noTouchDialog?.handler?.postDelayed({
+                noTouchDialog?.dismiss()
+                mainActivity.showFragment(MainActivity.ID_FRAGMENT_MESSAGE, "0")
+            }, ImageDialog.TIME)
         }
-        view.findViewById<AppCompatButton>(R.id.wash_hand).setOnClickListener {
-            washHandsMessage()
+        view.findViewById<FrameLayout>(R.id.wash_hand).setOnClickListener {
+            showNoTouchDialog(false)
+            noTouchDialog?.handler?.postDelayed({
+                noTouchDialog?.dismiss()
+                mainActivity.showFragment(MainActivity.ID_FRAGMENT_MESSAGE, "1")
+            }, ImageDialog.TIME)
         }
-        view.findViewById<AppCompatButton>(R.id.mask).setOnClickListener {
-            maskMessage()
+        view.findViewById<FrameLayout>(R.id.mask).setOnClickListener {
+            showNoTouchDialog(false)
+            noTouchDialog?.handler?.postDelayed({
+                noTouchDialog?.dismiss()
+                mainActivity.showFragment(MainActivity.ID_FRAGMENT_MESSAGE, "2")
+            }, ImageDialog.TIME)
         }
-        view.findViewById<AppCompatButton>(R.id.symptom).setOnClickListener {
-            symptomMessage()
+        view.findViewById<FrameLayout>(R.id.symptom).setOnClickListener {
+            showNoTouchDialog(false)
+            noTouchDialog?.handler?.postDelayed({
+                noTouchDialog?.dismiss()
+                mainActivity.showFragment(MainActivity.ID_FRAGMENT_MESSAGE, "3")
+            }, ImageDialog.TIME)
         }
-        mainActivity.goToBookmark("HELLO_" + (1..4).random(), "topic_covid")
+        if (sayHello)
+            FutureUtils.futureOf {
+                mainActivity.goToBookmarkAsync("HELLO", "topic_covid")
+            }.thenConsume {
+                mainActivity.goToBookmarkAsync("HELLO_" + (1..4).random(), "topic_covid")
+            }
+        else
+            mainActivity.goToBookmark("HELLO_" + (1..4).random(), "topic_covid")
+        FutureUtils.futureOf {
+            mainActivity.currentChatData?.chat?.addOnHearingChangedListener { hearing ->
+                stopAnim = hearing.not()
+                if (!animIsLaunch)
+                    animationScaleUpDown(view.findViewById<ImageView>(R.id.micro), 2F).run()
+            }
+        }
     }
 
-    /**
-     * Start Message Protective Measure
-     */
-    fun protectiveMeasureMessage() {
-        prefix = PREFIX_MEASURE
-        Log.d(TAG, "Start Information Message : $prefix")
-        startMessage(if (mainActivity.config?.locale?.language == "fr") messageDataFrenchProtectiveMeasures else messageDataEnglishProtectiveMeasures)
+    private fun animationScaleUpDown(view : View, value : Float) : Runnable {
+        animIsLaunch = true
+        return Runnable {
+            if (!stopAnim)
+                view.animate().scaleX(value).scaleY(value).setDuration(500).withEndAction(animationScaleUpDown(view, if (value == 1F) 2F else 1F))
+            else {
+                if (value == 1F)
+                    view.animate().scaleX(1F).scaleY(1F).setDuration(500)
+                animIsLaunch = false
+            }}
     }
 
-    /**
-     * Start Message Wash Hand
-     */
-    fun washHandsMessage() {
-        prefix = PREFIX_WASH
-        Log.d(TAG, "Start Information Message : $prefix")
-        startMessage(if (mainActivity.config?.locale?.language == "fr") messageDataFrenchWashHand else messageDataEnglishWashHand)
-    }
-
-
-    /**
-     * Start Message Mask
-     */
-    fun maskMessage() {
-        prefix = PREFIX_MASK
-        Log.d(TAG, "Start Information Message : $prefix")
-        startMessage(if (mainActivity.config?.locale?.language == "fr") messageDataFrenchMask else messageDataEnglishMask)
-    }
-
-
-    /**
-     * Start Message Symptom
-     */
-    fun symptomMessage() {
-        prefix = PREFIX_SYMPTOM
-        Log.d(TAG, "Start Information Message : $prefix")
-        startMessage(if (mainActivity.config?.locale?.language == "fr") messageDataFrenchSymptom else messageDataEnglishSymptom)
+    override fun onDestroy() {
+        super.onDestroy()
+        FutureUtils.futureOf {
+            mainActivity.currentChatData?.chat?.removeAllOnHearingChangedListeners()
+        }
     }
 
     /**
@@ -108,90 +104,4 @@ class MainFragment : BaseRobotFragment() {
      */
     override fun getFirstBookmark(): String? = null
 
-    /**
-     * @param message: CovidInfoData : list of messages to show
-     */
-    private fun startMessage(message: CovidInfoData) {
-        messageData = message
-        if (mainActivity.qiContext != null)
-                messagePlayers = messageData.messages.map { msg -> Pair(msg.first, msg.second) }
-        currentMessageIndex = 0
-        layout.findViewById<FrameLayout>(R.id.welcome_message).visibility = View.GONE
-        layout.findViewById<LinearLayout>(R.id.loop_message).visibility = View.VISIBLE
-        mainActivity.goToBookmark(prefix + "1", "topic_covid")
-        showMessage(1)
-    }
-
-    /**
-     * @param index: Int index of the current message Text+Image
-     */
-    fun showMessage(index: Int) {
-        currentMessageIndex = index
-        if (currentMessageIndex > messagePlayers.size)
-            return
-        this.message = messagePlayers[currentMessageIndex - 1]
-        showCurrentMessage()
-    }
-
-    /**
-     * Interaction at the end of the message
-     */
-    fun endMessage() {
-        mainActivity.runOnUiThread {
-            layout.findViewById<LinearLayout>(R.id.loop_message).visibility = View.GONE
-            layout.findViewById<FrameLayout>(R.id.welcome_message).visibility = View.VISIBLE
-        }
-        mainActivity.goToBookmark("END_SLIDE", "topic_covid")
-    }
-
-    /**
-     * Display the current message
-     */
-    private fun showCurrentMessage() {
-        val mainImage = layout.findViewById<ImageView>(R.id.mainImage)
-        val mainLabel = layout.findViewById<TextView>(R.id.mainLabel)
-
-        mainActivity.runOnUiThread {
-            if (message?.second == null) {
-                mainImage?.visibility = View.GONE
-            } else {
-                mainImage?.setImageResource(message?.second!!)
-                mainImage?.visibility = View.VISIBLE
-            }
-            mainLabel?.text = message?.first
-            mainLabel?.visibility = View.VISIBLE
-        }
-    }
-
-    /***************************
-     * MASK DETECTOR
-     **************************/
-    /**
-     * @param faces: List of faces detected by the library FaceMaskDetection
-     */
-    fun maskDetector(faces: List<MultiChannelDetection.FaceDetected>) {
-        if (faces.isNotEmpty() && !skipMask) {
-            if (faces[0].hasMask) {
-                if (noMaskDialog != null && noMaskDialog?.isVisible!!)
-                    noMaskDialog?.dismiss()
-            } else {
-                if (noMaskDialog == null || !noMaskDialog?.isVisible!!) {
-                    noMaskDialog = MaskDialog()
-                    noMaskDialog?.setPicture(faces[0].picture)
-                    noMaskDialog?.setOnClickListener {
-                        skipMask = true
-                        noMaskDialog?.dismiss()
-                    }
-                    noMaskDialog?.show(mainActivity.fragmentManager, mainActivity.getString(R.string.warning))
-                } else if (noMaskDialog != null && noMaskDialog?.isVisible!!)
-                    noMaskDialog?.setPicture(faces[0].picture)
-            }
-        }
-    }
-
-    override fun onDestroy() {
-        if (noMaskDialog != null && noMaskDialog?.isVisible!!)
-            noMaskDialog?.dismiss()
-        super.onDestroy()
-    }
 }

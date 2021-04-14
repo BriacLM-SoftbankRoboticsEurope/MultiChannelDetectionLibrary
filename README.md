@@ -85,28 +85,28 @@ List of options
 
 ```kotlin
     // Directory where store the map (Map and localize)
-    var filesDirectoryPath: String? = null
-    // Save intial orientation
-    var saveInitialPosition = true
+    this.multiChannelDetection?.filesDirectoryPath: String? = null
+    // Save intial orientation (true)
+    this.multiChannelDetection?.saveInitialPosition = true
     // Use the head camera (true) or the tablet camera (false) to use the mask detection
     this.multiChannelDetection?.useHeadCamera = true
-    // Hold pepper base when he is not engaged with a user
+    // Hold pepper base when he is not engaged with a user (true) or free the base (false)
     this.multiChannelDetection?.holdBase = true
-    // Turn pepper to the initial orientation when he is localized
+    // Turn pepper to the initial orientation when he is localized  (true)
     this.multiChannelDetection?.turnToInitialPosition = true
-    // Charging flap state change detection
+    // Charging flap state change detection (true)
     this.multiChannelDetection?.useChargingFlapDetection = true
-    // Use the HumanAwarness from the QiSDK
+    // Use the HumanAwarness from the QiSDK (true)
     this.multiChannelDetection?.useHumanDetection = true
-    // Use the FaceMask Detection from the library
+    // Use the FaceMask Detection from the library (true)
     this.multiChannelDetection?.useFaceMaskDetection = true
-    // Use the onEngagedHumanChangedListener from HumanAwarness
+    // Use the onEngagedHumanChangedListener from HumanAwarness (true)
     this.multiChannelDetection?.useEngagedHumanChangedListener = true
-    // Use the onRecommendedHumanToEngageChangedListener from HumanAwarness
+    // Use the onRecommendedHumanToEngageChangedListener from HumanAwarness (true)
     this.multiChannelDetection?.useRecommendedHumanToEngageChangedListener = true
-    // Use the onHumansAroundChangedListener from HumanAwarness
+    // Use the onHumansAroundChangedListener from HumanAwarness (true)
     this.multiChannelDetection?.useHumansAroundChangedListener = true
-    // Map the surrounding Environement and localize into it
+    // Map the surrounding Environement and localize into it (true)
     this.multiChannelDetection?.hasToLocalizeAndMap = true
 ```
 

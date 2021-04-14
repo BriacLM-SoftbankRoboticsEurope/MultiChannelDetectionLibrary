@@ -10,8 +10,8 @@ android {
         applicationId "com.softbankrobotics.peppercovidassistant"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 19
-        versionName "1.5.6"
+        versionCode 23
+        versionName "2.0.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

@@ -19,10 +19,11 @@ data class CovidInfoData (
 val messageDataFrenchProtectiveMeasures = CovidInfoData(
     locale = Locale(Language.FRENCH, Region.FRANCE),
     messages = listOf(
-        Pair("Lavez-vous très régulièrement les mains", R.drawable.ic_lavmains),
-        Pair("Toussez ou éternuez dans votre coude ou dans un mouchoir", R.drawable.ic_toussecoude),
-        Pair("Utilisez un mouchoir à usage unique et jetez-le", R.drawable.ic_mouchoirs),
-        Pair("Saluez sans se serrer la main, évitez les embrassades", R.drawable.ic_mains)
+        Pair("Lavez-vous très régulièrement les mains", R.drawable.ic_wash_hands),
+        Pair("Porter un masque", R.drawable.ic_mask),
+        Pair("Toussez ou éternuez dans votre coude ou dans un mouchoir", R.drawable.ic_sneeze),
+        Pair("Utilisez un mouchoir à usage unique et jetez-le", R.drawable.ic_tissues),
+        Pair("Saluez sans se serrer la main, évitez les embrassades", R.drawable.ic_distance)
     )
 )
 
@@ -33,10 +34,11 @@ val messageDataFrenchProtectiveMeasures = CovidInfoData(
 val messageDataEnglishProtectiveMeasures = CovidInfoData(
     locale = Locale(Language.ENGLISH, Region.UNITED_STATES),
     messages = listOf(
-        Pair("Wash your hand regularly", R.drawable.ic_lavmains),
-        Pair("Cough or sneeze in your elbow or in a tissue", R.drawable.ic_toussecoude),
-        Pair("Use a disposable tissue and then throw it in a trash bin", R.drawable.ic_mouchoirs),
-        Pair("Avoid handshake and hug", R.drawable.ic_mains)
+        Pair("Wash your hand often", R.drawable.ic_wash_hands),
+        Pair("Wear a mask", R.drawable.ic_mask),
+        Pair("Cough or sneeze in your elbow or in a tissue", R.drawable.ic_sneeze),
+        Pair("Use a disposable tissue and then throw it in a trash bin", R.drawable.ic_tissues),
+        Pair("Avoid handshake and hug", R.drawable.ic_distance)
     )
 )
 

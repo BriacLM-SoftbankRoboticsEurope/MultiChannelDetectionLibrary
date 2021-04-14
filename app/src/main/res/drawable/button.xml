@@ -3,7 +3,7 @@
     <item android:state_activated="false">
         <shape  android:shape="rectangle">
             <corners android:radius="3dp" />
-            <stroke android:width="5dp" android:color="#162955" />
+            <stroke android:width="5dp" android:color="#F0F0F0" />
             <padding android:left="3dp" android:right="3dp" android:top="3dp" android:bottom="3dp"/>
             <gradient android:startColor="#FFF" android:endColor="#E8E8E8" android:angle="270" />
         </shape>
@@ -11,7 +11,7 @@
     <item android:state_activated="true" >
         <shape  android:shape="rectangle" >
             <corners android:radius="3dp" />
-            <stroke android:width="5dp" android:color="#162955" />
+            <stroke android:width="5dp" android:color="#F0F0F0" />
             <padding android:left="3dp" android:right="3dp" android:top="3dp" android:bottom="3dp"/>
             <solid android:color="#FFF"/>
         </shape>
@@ -19,7 +19,7 @@
     <item android:state_pressed="true" >
         <shape  android:shape="rectangle" >
             <corners android:radius="3dp" />
-            <stroke android:width="5dp" android:color="#162955" />
+            <stroke android:width="5dp" android:color="#F0F0F0" />
             <padding android:left="3dp" android:right="3dp" android:top="3dp" android:bottom="3dp"/>
             <solid android:color="#FFF"/>
         </shape>
